@@ -73,26 +73,38 @@ public class ChessPiece {
     }
 
     private Collection<ChessMove> calcKingMoves(ChessBoard board, ChessPosition myPosition) {
+        Collection<ChessMove> kingMoves = new ArrayList<>();
+
 
     }
 
     private Collection<ChessMove> calcQueenMoves(ChessBoard board, ChessPosition myPosition) {
+        Collection<ChessMove> queenMoves = new ArrayList<>();
+
 
     }
 
     private Collection<ChessMove> calcBishopMoves(ChessBoard board, ChessPosition myPosition) {
+        Collection<ChessMove> bishopMoves = new ArrayList<>();
+
 
     }
 
     private Collection<ChessMove> calcKnightMoves(ChessBoard board, ChessPosition myPosition) {
+        Collection<ChessMove> knightMoves = new ArrayList<>();
+
 
     }
 
     private Collection<ChessMove> calcRookMoves(ChessBoard board, ChessPosition myPosition) {
+        Collection<ChessMove> rookMoves = new ArrayList<>();
+
 
     }
 
     private Collection<ChessMove> calcPawnMoves(ChessBoard board, ChessPosition myPosition) {
+        Collection<ChessMove> pawnMoves = new ArrayList<>();
+
 
     }
 
