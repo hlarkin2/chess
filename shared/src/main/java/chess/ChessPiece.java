@@ -252,22 +252,22 @@ public class ChessPiece {
         int currentRow = myPosition.getRow();
         int currentCol = myPosition.getColumn();
 
-        // move north
-        ChessPosition moveN = new ChessPosition(currentRow + 1, currentCol);
-        // move south
-        ChessPosition moveS = new ChessPosition(currentRow - 1, currentCol);
-        // move east
-        ChessPosition moveE = new ChessPosition(currentRow, currentCol + 1);
-        // move west
-        ChessPosition moveW = new ChessPosition(currentRow, currentCol - 1);
-        // move northeast
-        ChessPosition moveNE = new ChessPosition(currentRow + 1, currentCol + 1);
-        // move northwest
-        ChessPosition moveNW = new ChessPosition(currentRow + 1, currentCol - 1);
-        // move southeast
-        ChessPosition moveSE = new ChessPosition(currentRow - 1, currentCol + 1);
-        // move southwest
-        ChessPosition moveSW = new ChessPosition(currentRow - 1, currentCol - 1);
+        // move up2right1
+        ChessPosition moveUp2Right1 = new ChessPosition(currentRow + 2, currentCol + 1);
+        // move up2left1
+        ChessPosition moveUp2Left1 = new ChessPosition(currentRow + 2 , currentCol - 1);
+        // move down2right1
+        ChessPosition moveDown2Right1 = new ChessPosition(currentRow - 2, currentCol + 1);
+        // move down2left1
+        ChessPosition moveDown2Left1 = new ChessPosition(currentRow - 2, currentCol - 1);
+        // move up1right2
+        ChessPosition moveUp1Right2 = new ChessPosition(currentRow + 1, currentCol + 2);
+        // move up1left2
+        ChessPosition moveUp1Left2 = new ChessPosition(currentRow + 1, currentCol - 2);
+        // move down1right2
+        ChessPosition moveDown1Right2 = new ChessPosition(currentRow - 1, currentCol + 2);
+        // move down1left2
+        ChessPosition moveDown1Left2 = new ChessPosition(currentRow - 1, currentCol - 2);
 
         if ((currentRow + 1) <= 8 && (1 <= currentCol && currentCol <= 8)){
             ChessPiece atPosPiece = board.getPiece(moveN);
