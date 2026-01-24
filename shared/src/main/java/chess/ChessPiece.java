@@ -445,6 +445,25 @@ public class ChessPiece {
             }
         }
 
+        ChessPosition rightDiagonal = new ChessPosition((currentRow + direction), (currentCol + 1));
+        ChessPosition leftDiagonal = new ChessPosition((currentRow + direction), (currentCol - 1));
+
+        if ((currentRow + direction) >= 1 && (currentRow + direction) <= 8 && ((currentCol + 1) <= 8)) {
+            ChessPiece atPosPiece = board.getPiece(rightDiagonal);
+            if (board.getPiece(rightDiagonal) != null && atPosPiece.getTeamColor() != this.getTeamColor()) {
+                pawnMoves.add(new ChessMove(myPosition, rightDiagonal, null));
+            }
+        }
+        if ((currentRow + direction) >= 1 && (currentRow + direction) <= 8 && ((currentCol - 1) >= 1)) {
+            ChessPiece atPosPiece = board.getPiece(leftDiagonal);
+            if (board.getPiece(leftDiagonal) != null && atPosPiece.getTeamColor() != this.getTeamColor()) {
+                pawnMoves.add(new ChessMove(myPosition, leftDiagonal, null));
+            }
+        }
+
+        ChessPosition endPosWhite = new ChessPosition(8, currentCol);
+        ChessPosition endPosBlack = new ChessPosition(1, currentCol);
+
         return pawnMoves;
     }
 
