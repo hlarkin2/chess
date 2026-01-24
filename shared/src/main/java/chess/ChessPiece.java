@@ -448,12 +448,12 @@ public class ChessPiece {
             if (board.getPiece(rightDiagonal) != null && atPosPiece.getTeamColor() != this.getTeamColor()) {
                 int endRow = newRow.getRow();
                 if ((this.getTeamColor() == ChessGame.TeamColor.WHITE && endRow == 8) || (this.getTeamColor() == ChessGame.TeamColor.BLACK && endRow == 1)) {
-                    pawnMoves.add(new ChessMove(myPosition, newRow, PieceType.QUEEN));
-                    pawnMoves.add(new ChessMove(myPosition, newRow, PieceType.ROOK));
-                    pawnMoves.add(new ChessMove(myPosition, newRow, PieceType.BISHOP));
-                    pawnMoves.add(new ChessMove(myPosition, newRow, PieceType.KNIGHT));
+                    pawnMoves.add(new ChessMove(myPosition, rightDiagonal, PieceType.QUEEN));
+                    pawnMoves.add(new ChessMove(myPosition, rightDiagonal, PieceType.ROOK));
+                    pawnMoves.add(new ChessMove(myPosition, rightDiagonal, PieceType.BISHOP));
+                    pawnMoves.add(new ChessMove(myPosition, rightDiagonal, PieceType.KNIGHT));
                 } else {
-                    pawnMoves.add(new ChessMove(myPosition, newRow, null));
+                    pawnMoves.add(new ChessMove(myPosition, rightDiagonal, null));
                 }
             }
         }
@@ -462,12 +462,12 @@ public class ChessPiece {
             if (board.getPiece(leftDiagonal) != null && atPosPiece.getTeamColor() != this.getTeamColor()) {
                 int endRow = newRow.getRow();
                 if ((this.getTeamColor() == ChessGame.TeamColor.WHITE && endRow == 8) || (this.getTeamColor() == ChessGame.TeamColor.BLACK && endRow == 1)) {
-                    pawnMoves.add(new ChessMove(myPosition, newRow, PieceType.QUEEN));
-                    pawnMoves.add(new ChessMove(myPosition, newRow, PieceType.ROOK));
-                    pawnMoves.add(new ChessMove(myPosition, newRow, PieceType.BISHOP));
-                    pawnMoves.add(new ChessMove(myPosition, newRow, PieceType.KNIGHT));
+                    pawnMoves.add(new ChessMove(myPosition, leftDiagonal, PieceType.QUEEN));
+                    pawnMoves.add(new ChessMove(myPosition, leftDiagonal, PieceType.ROOK));
+                    pawnMoves.add(new ChessMove(myPosition, leftDiagonal, PieceType.BISHOP));
+                    pawnMoves.add(new ChessMove(myPosition, leftDiagonal, PieceType.KNIGHT));
                 } else {
-                    pawnMoves.add(new ChessMove(myPosition, newRow, null));
+                    pawnMoves.add(new ChessMove(myPosition, leftDiagonal, null));
                 }
             }
         }
