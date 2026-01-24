@@ -75,37 +75,62 @@ public class ChessPiece {
     private Collection<ChessMove> calcKingMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> kingMoves = new ArrayList<>();
 
+        int currentRow = myPosition.getRow();
+        int currentCol = myPosition.getColumn();
 
+        // move north
+        ChessPosition moveN = new ChessPosition(currentRow + 1, currentCol);
+        // move south
+        ChessPosition moveS = new ChessPosition(currentRow - 1, currentCol);
+        // move east
+        ChessPosition moveE = new ChessPosition(currentRow, currentCol + 1);
+        // move west
+        ChessPosition moveW = new ChessPosition(currentRow, currentCol - 1);
+        // move northeast
+        ChessPosition moveNE = new ChessPosition(currentRow + 1, currentCol + 1);
+        // move northwest
+        ChessPosition moveNW = new ChessPosition(currentRow + 1, currentCol - 1);
+        // move southeast
+        ChessPosition moveSE = new ChessPosition(currentRow - 1, currentCol + 1);
+        // move southwest
+        ChessPosition moveSW = new ChessPosition(currentRow - 1, currentCol + 1);
+
+        boolean validMove;
+        if ((currentRow + 1) <= 8 && (1 <= currentCol <= 8)){
+
+        }
+
+        return kingMoves;
     }
 
     private Collection<ChessMove> calcQueenMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> queenMoves = new ArrayList<>();
 
-
+        return queenMoves;
     }
 
     private Collection<ChessMove> calcBishopMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> bishopMoves = new ArrayList<>();
 
-
+        return bishopMoves;
     }
 
     private Collection<ChessMove> calcKnightMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> knightMoves = new ArrayList<>();
 
-
+        return knightMoves;
     }
 
     private Collection<ChessMove> calcRookMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> rookMoves = new ArrayList<>();
 
-
+        return rookMoves;
     }
 
     private Collection<ChessMove> calcPawnMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> pawnMoves = new ArrayList<>();
 
-
+        return pawnMoves;
     }
 
     @Override
