@@ -173,10 +173,10 @@ public class ChessPiece {
     private Collection<ChessMove> calcQueenMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> queenMoves = new ArrayList<>();
 
-        // rook moves
-
-
-        // bishop moves
+        // repurpose all rook moves
+        queenMoves.addAll(calcRookMoves(board, myPosition));
+        //repurpose all bishop moves
+        queenMoves.addAll(calcBishopMoves(board, myPosition));
 
         return queenMoves;
     }
