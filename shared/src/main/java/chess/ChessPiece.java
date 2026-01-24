@@ -278,7 +278,7 @@ public class ChessPiece {
             }
         }
 
-        if ((currentRow + 2) >= 1 && (currentCol - 1) >= 1){
+        if ((currentRow + 2) <= 8 && (currentCol - 1) >= 1){
             ChessPiece atPosPiece = board.getPiece(moveUp2Left1);
             if (atPosPiece == null) {
                 knightMoves.add(new ChessMove(myPosition, moveUp2Left1, null));
