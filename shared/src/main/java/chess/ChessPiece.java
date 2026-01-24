@@ -104,66 +104,66 @@ public class ChessPiece {
             }
         }
 
-        if ((currentRow + 1) <= 8 && (1 <= currentCol && currentCol <= 8)){
-            ChessPiece atPosPiece = board.getPiece(moveN);
+        if ((currentRow - 1) >= 1 && (1 <= currentCol && currentCol <= 8)){
+            ChessPiece atPosPiece = board.getPiece(moveS);
             if (atPosPiece == null) {
-                kingMoves.add(new ChessMove(myPosition, moveN, null));
+                kingMoves.add(new ChessMove(myPosition, moveS, null));
             } else if (atPosPiece.getTeamColor() != this.getTeamColor()) {
-                kingMoves.add(new ChessMove(myPosition, moveN, null));
+                kingMoves.add(new ChessMove(myPosition, moveS, null));
             }
         }
 
-        if ((currentRow + 1) <= 8 && (1 <= currentCol && currentCol <= 8)){
-            ChessPiece atPosPiece = board.getPiece(moveN);
+        if ((1 <= currentRow && currentRow <= 8) && (currentCol + 1) <=8){
+            ChessPiece atPosPiece = board.getPiece(moveE);
             if (atPosPiece == null) {
-                kingMoves.add(new ChessMove(myPosition, moveN, null));
+                kingMoves.add(new ChessMove(myPosition, moveE, null));
             } else if (atPosPiece.getTeamColor() != this.getTeamColor()) {
-                kingMoves.add(new ChessMove(myPosition, moveN, null));
+                kingMoves.add(new ChessMove(myPosition, moveE, null));
             }
         }
 
-        if ((currentRow + 1) <= 8 && (1 <= currentCol && currentCol <= 8)){
-            ChessPiece atPosPiece = board.getPiece(moveN);
+        if ((1 <= currentRow && currentRow <= 8) && (currentCol - 1) >= 1){
+            ChessPiece atPosPiece = board.getPiece(moveW);
             if (atPosPiece == null) {
-                kingMoves.add(new ChessMove(myPosition, moveN, null));
+                kingMoves.add(new ChessMove(myPosition, moveW, null));
             } else if (atPosPiece.getTeamColor() != this.getTeamColor()) {
-                kingMoves.add(new ChessMove(myPosition, moveN, null));
+                kingMoves.add(new ChessMove(myPosition, moveW, null));
             }
         }
 
-        if ((currentRow + 1) <= 8 && (1 <= currentCol && currentCol <= 8)){
-            ChessPiece atPosPiece = board.getPiece(moveN);
+        if ((currentRow + 1) <= 8 && (currentCol + 1) <= 8){
+            ChessPiece atPosPiece = board.getPiece(moveNE);
             if (atPosPiece == null) {
-                kingMoves.add(new ChessMove(myPosition, moveN, null));
+                kingMoves.add(new ChessMove(myPosition, moveNE, null));
             } else if (atPosPiece.getTeamColor() != this.getTeamColor()) {
-                kingMoves.add(new ChessMove(myPosition, moveN, null));
+                kingMoves.add(new ChessMove(myPosition, moveNE, null));
             }
         }
 
-        if ((currentRow + 1) <= 8 && (1 <= currentCol && currentCol <= 8)){
-            ChessPiece atPosPiece = board.getPiece(moveN);
+        if ((currentRow + 1) <= 8 && (currentCol - 1) >= 1){
+            ChessPiece atPosPiece = board.getPiece(moveNW);
             if (atPosPiece == null) {
-                kingMoves.add(new ChessMove(myPosition, moveN, null));
+                kingMoves.add(new ChessMove(myPosition, moveNW, null));
             } else if (atPosPiece.getTeamColor() != this.getTeamColor()) {
-                kingMoves.add(new ChessMove(myPosition, moveN, null));
+                kingMoves.add(new ChessMove(myPosition, moveNW, null));
             }
         }
 
-        if ((currentRow + 1) <= 8 && (1 <= currentCol && currentCol <= 8)){
-            ChessPiece atPosPiece = board.getPiece(moveN);
+        if ((currentRow - 1) >= 1 && (currentCol + 1) <=8){
+            ChessPiece atPosPiece = board.getPiece(moveSE);
             if (atPosPiece == null) {
-                kingMoves.add(new ChessMove(myPosition, moveN, null));
+                kingMoves.add(new ChessMove(myPosition, moveSE, null));
             } else if (atPosPiece.getTeamColor() != this.getTeamColor()) {
-                kingMoves.add(new ChessMove(myPosition, moveN, null));
+                kingMoves.add(new ChessMove(myPosition, moveSE, null));
             }
         }
 
-        if ((currentRow + 1) <= 8 && (1 <= currentCol && currentCol <= 8)){
-            ChessPiece atPosPiece = board.getPiece(moveN);
+        if ((currentRow - 1) >= 1 && (currentCol - 1) >= 1){
+            ChessPiece atPosPiece = board.getPiece(moveSW);
             if (atPosPiece == null) {
-                kingMoves.add(new ChessMove(myPosition, moveN, null));
+                kingMoves.add(new ChessMove(myPosition, moveSW, null));
             } else if (atPosPiece.getTeamColor() != this.getTeamColor()) {
-                kingMoves.add(new ChessMove(myPosition, moveN, null));
+                kingMoves.add(new ChessMove(myPosition, moveSW, null));
             }
         }
 
