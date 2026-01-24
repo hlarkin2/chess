@@ -417,9 +417,24 @@ public class ChessPiece {
         int direction;
 
         if (this.getTeamColor() == ChessGame.TeamColor.WHITE) {
-            direction = 1;
-        } else {
-            direction = -1;
+            if (currentRow == 2) {
+                direction = 2;
+            } else {
+                direction = 1;
+            }
+        } else if (this.getTeamColor() == ChessGame.TeamColor.BLACK) {
+            if (currentRow == 7) {
+                direction = -2;
+            } else {
+                direction = -1;
+            }
+        }
+
+        ChessPosition newRow = new ChessPosition((currentRow + direction), currentCol);
+        if (currentRow <= 8) {
+            if (board.getPiece(newRow) == null) {
+                pawnMoves.add(new ChessMove(myPosition, newRow, null));
+            }
         }
 
         return pawnMoves;
