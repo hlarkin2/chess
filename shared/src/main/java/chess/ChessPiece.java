@@ -412,6 +412,16 @@ public class ChessPiece {
     private Collection<ChessMove> calcPawnMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> pawnMoves = new ArrayList<>();
 
+        int currentRow = myPosition.getRow();
+        int currentCol = myPosition.getColumn();
+        int direction;
+
+        if (this.getTeamColor() == ChessGame.TeamColor.WHITE) {
+            direction = 1;
+        } else {
+            direction = -1;
+        }
+
         return pawnMoves;
     }
 
