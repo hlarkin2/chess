@@ -423,19 +423,26 @@ public class ChessPiece {
         }
 
         ChessPosition newRow = new ChessPosition((currentRow + direction), currentCol);
-        if (currentRow <= 8) {
+        if (1<= currentRow && currentRow <= 8) {
             if (board.getPiece(newRow) == null) {
                 pawnMoves.add(new ChessMove(myPosition, newRow, null));
             }
         }
 
-        boolean startPos;
+        boolean atStartPos;
         if (currentRow == 2 && this.getTeamColor() == ChessGame.TeamColor.WHITE) {
-            startPos = true;
+            atStartPos = true;
         } else if (currentRow == 7 && this.getTeamColor() == ChessGame.TeamColor.BLACK) {
-            startPos = true;
+            atStartPos = true;
         } else {
-            startPos = false;
+            atStartPos = false;
+        }
+
+        ChessPosition move2Pos = new ChessPosition((currentRow + (direction * 2)), currentCol);
+        if (atStartPos) {
+            if (board.getPiece(move2Pos) == null && board.getPiece(newRow) == null) {
+                pawnMoves.add(new ChessMove(myPosition, move2Pos, null));
+            }
         }
 
         return pawnMoves;
