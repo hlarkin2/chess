@@ -429,6 +429,15 @@ public class ChessPiece {
             }
         }
 
+        boolean startPos;
+        if (currentRow == 2 && this.getTeamColor() == ChessGame.TeamColor.WHITE) {
+            startPos = true;
+        } else if (currentRow == 7 && this.getTeamColor() == ChessGame.TeamColor.BLACK) {
+            startPos = true;
+        } else {
+            startPos = false;
+        }
+
         return pawnMoves;
     }
 
