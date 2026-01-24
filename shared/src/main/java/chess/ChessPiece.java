@@ -57,6 +57,16 @@ public class ChessPiece {
 
         if (this.type == PieceType.KING) {
             return calcKingMoves(board, myPosition);
+        } else if (this.type == PieceType.QUEEN) {
+            return calcQueenMoves(board, myPosition);
+        } else if (this.type == PieceType.BISHOP) {
+            return calcBishopMoves(board, myPosition);
+        } else if (this.type == PieceType.KNIGHT) {
+            return calcKnightMoves(board, myPosition);
+        } else if (this.type == PieceType.ROOK) {
+            return calcRookMoves(board, myPosition);
+        } else if (this.type == PieceType.PAWN) {
+            return calcPawnMoves(board, myPosition);
         }
 
         return moves;
