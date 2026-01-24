@@ -417,17 +417,9 @@ public class ChessPiece {
         int direction;
 
         if (this.getTeamColor() == ChessGame.TeamColor.WHITE) {
-            if (currentRow == 2) {
-                direction = 2;
-            } else {
-                direction = 1;
-            }
-        } else if (this.getTeamColor() == ChessGame.TeamColor.BLACK) {
-            if (currentRow == 7) {
-                direction = -2;
-            } else {
-                direction = -1;
-            }
+            direction = 1;
+        } else {
+            direction = -1;
         }
 
         ChessPosition newRow = new ChessPosition((currentRow + direction), currentCol);
