@@ -76,6 +76,26 @@ public class ChessPiece {
 
     }
 
+    private Collection<ChessMove> calcQueenMoves(ChessBoard board, ChessPosition myPosition) {
+
+    }
+
+    private Collection<ChessMove> calcBishopMoves(ChessBoard board, ChessPosition myPosition) {
+
+    }
+
+    private Collection<ChessMove> calcKnightMoves(ChessBoard board, ChessPosition myPosition) {
+
+    }
+
+    private Collection<ChessMove> calcRookMoves(ChessBoard board, ChessPosition myPosition) {
+
+    }
+
+    private Collection<ChessMove> calcPawnMoves(ChessBoard board, ChessPosition myPosition) {
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {
