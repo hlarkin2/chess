@@ -278,7 +278,7 @@ public class ChessPiece {
             }
         }
 
-        if ((currentRow - 1) >= 1 && (1 <= currentCol && currentCol <= 8)){
+        if ((currentRow + 2) >= 1 && (currentCol - 1) >= 1){
             ChessPiece atPosPiece = board.getPiece(moveUp2Left1);
             if (atPosPiece == null) {
                 knightMoves.add(new ChessMove(myPosition, moveUp2Left1, null));
@@ -287,7 +287,7 @@ public class ChessPiece {
             }
         }
 
-        if ((1 <= currentRow && currentRow <= 8) && (currentCol + 1) <=8){
+        if ((currentRow - 2) >= 1 && (currentCol + 1) <= 8){
             ChessPiece atPosPiece = board.getPiece(moveDown2Right1);
             if (atPosPiece == null) {
                 knightMoves.add(new ChessMove(myPosition, moveDown2Right1, null));
@@ -296,7 +296,7 @@ public class ChessPiece {
             }
         }
 
-        if ((1 <= currentRow && currentRow <= 8) && (currentCol - 1) >= 1){
+        if ((currentRow - 2) >= 1 && (currentCol - 1) >= 1){
             ChessPiece atPosPiece = board.getPiece(moveDown2Left1);
             if (atPosPiece == null) {
                 knightMoves.add(new ChessMove(myPosition, moveDown2Left1, null));
@@ -305,7 +305,7 @@ public class ChessPiece {
             }
         }
 
-        if ((currentRow + 1) <= 8 && (currentCol + 1) <= 8){
+        if ((currentRow + 1) <= 8 && (currentCol + 2) <= 8){
             ChessPiece atPosPiece = board.getPiece(moveUp1Right2);
             if (atPosPiece == null) {
                 knightMoves.add(new ChessMove(myPosition, moveUp1Right2, null));
@@ -314,7 +314,7 @@ public class ChessPiece {
             }
         }
 
-        if ((currentRow + 1) <= 8 && (currentCol - 1) >= 1){
+        if ((currentRow + 1) <= 8 && (currentCol - 2) >= 1){
             ChessPiece atPosPiece = board.getPiece(moveUp1Left2);
             if (atPosPiece == null) {
                 knightMoves.add(new ChessMove(myPosition, moveUp1Left2, null));
@@ -323,7 +323,7 @@ public class ChessPiece {
             }
         }
 
-        if ((currentRow - 1) >= 1 && (currentCol + 1) <=8){
+        if ((currentRow - 1) >= 1 && (currentCol + 2) <=8){
             ChessPiece atPosPiece = board.getPiece(moveDown1Right2);
             if (atPosPiece == null) {
                 knightMoves.add(new ChessMove(myPosition, moveDown1Right2, null));
@@ -332,7 +332,7 @@ public class ChessPiece {
             }
         }
 
-        if ((currentRow - 1) >= 1 && (currentCol - 1) >= 1){
+        if ((currentRow - 1) >= 1 && (currentCol - 2) >= 1){
             ChessPiece atPosPiece = board.getPiece(moveDown1Left2);
             if (atPosPiece == null) {
                 knightMoves.add(new ChessMove(myPosition, moveDown1Left2, null));
