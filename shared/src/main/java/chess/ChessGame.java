@@ -54,11 +54,27 @@ public class ChessGame {
         ChessPiece piece = board.getPiece(startPosition);
         if (piece == null) return null;
 
-        Collection<ChessMove> validMoves = piece.pieceMoves(board, startPosition);
-        for (ChessMove move : validMoves) {
+        Collection<ChessMove> moves = piece.pieceMoves(board, startPosition);
+        Collection<ChessMove> validMoves = new ArrayList<>();
+
+        for (ChessMove move : moves) {
             ChessBoard boardCopy = this.board.copyBoard();
 
+            ChessPosition endPos = move.getEndPosition();
+            boardCopy.addPiece(startPosition, null);
+
+            if (move.getPromotionPiece()) {
+                ChessPiece promoPiece = new ChessPiece(piece.getTeamColor())
+            }
+
+            boardCopy.addPiece(endPos, piece);
+
+            if (!isCopyInCheck(piece.getTeamColor(), boardCopy)) {
+                validMoves.add(move);
+            }
         }
+
+        return validMoves;
     }
 
 
@@ -79,7 +95,28 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        ChessPosition kingPos = findKing(teamColor);
+        ChessPosition kingPos = findKing(teamColor, this.board);
+
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition pos = new ChessPosition(row, col);
+                ChessPiece piece = board.getPiece(pos);
+                if (piece != null && piece.getTeamColor() != teamColor) {
+                    Collection<ChessMove> opponentMoves = piece.pieceMoves(board, pos);
+                    for(ChessMove move : opponentMoves) {
+                        ChessPosition endPos = move.getEndPosition();
+                        if (endPos.equals(kingPos)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean isCopyInCheck(ChessBoard board, TeamColor teamColor) {
+        ChessPosition kingPos = findKing(teamColor, board);
 
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
@@ -138,11 +175,11 @@ public class ChessGame {
         return board;
     }
 
-    private ChessPosition findKing(TeamColor teamColor) {
+    private ChessPosition findKing(TeamColor teamColor, ChessBoard boardToSearch) {
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
                 ChessPosition pos = new ChessPosition(row, col);
-                ChessPiece piece = board.getPiece(pos);
+                ChessPiece piece = boardToSearch.getPiece(pos);
                 if (piece != null) {
                     if (piece.getPieceType() == ChessPiece.PieceType.KING) {
                         if (piece.getTeamColor() == teamColor) {
