@@ -111,4 +111,21 @@ public class ChessGame {
     public ChessBoard getBoard() {
         return board;
     }
+
+    private ChessPosition findKing(TeamColor teamColor) {
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition pos = new ChessPosition(row, col);
+                ChessPiece piece = board.getPiece(pos);
+                if (piece != null) {
+                    if (piece.getPieceType() == ChessPiece.PieceType.KING) {
+                        if (piece.getTeamColor() == teamColor) {
+                            return pos;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
 }
