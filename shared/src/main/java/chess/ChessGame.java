@@ -63,13 +63,14 @@ public class ChessGame {
             ChessPosition endPos = move.getEndPosition();
             boardCopy.addPiece(startPosition, null);
 
-            if (move.getPromotionPiece()) {
-                ChessPiece promoPiece = new ChessPiece(piece.getTeamColor())
+            if (move.getPromotionPiece() == null) {
+                boardCopy.addPiece(endPos, piece);
+            } else {
+                ChessPiece promoPiece = new ChessPiece(piece.getTeamColor(), move.getPromotionPiece());
+                boardCopy.addPiece(endPos, promoPiece);
             }
 
-            boardCopy.addPiece(endPos, piece);
-
-            if (!isCopyInCheck(piece.getTeamColor(), boardCopy)) {
+            if (!isCopyInCheck(boardCopy, piece.getTeamColor())) {
                 validMoves.add(move);
             }
         }
