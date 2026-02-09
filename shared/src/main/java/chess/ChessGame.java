@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -201,7 +202,24 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if (isInCheck(teamColor)) {
+            return false;
+        }
+
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition pos = new ChessPosition(row, col);
+                ChessPiece piece = board.getPiece(pos);
+                if (piece != null && piece.getTeamColor() == teamColor) {
+                    Collection<ChessMove> moves = validMoves(pos);
+                    if (!moves.isEmpty()) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -237,5 +255,19 @@ public class ChessGame {
             }
         }
         return null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessGame chessGame = (ChessGame) o;
+        return Objects.equals(getBoard(), chessGame.getBoard()) && currentTurn == chessGame.currentTurn;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getBoard(), currentTurn);
     }
 }
