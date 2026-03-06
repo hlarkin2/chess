@@ -30,7 +30,7 @@ public class UserService {
         UserData username = dataAccess.getUser(user.username());
 
         if (username == null) {
-            throw new DataAccessException("Error: user does not exist");
+            throw new DataAccessException("Error: bad request");
         }
 
         if (!username.password().equals(user.password())) {
@@ -45,7 +45,7 @@ public class UserService {
 
     public void logout(AuthData token) throws DataAccessException {
         if (dataAccess.getAuth(token.authToken()) == null) {
-            throw new DataAccessException("Error: no session to log out from");
+            throw new DataAccessException("Error: unauthorized");
         }
 
         dataAccess.deleteAuth(token);
