@@ -52,7 +52,7 @@ public class UserHandler {
         } catch (DataAccessException e) {
             if (e.getMessage().contains("bad request")) {
                 response.status(400);
-            } else if (e.getMessage().contains("user does not exist") || e.getMessage().contains("incorrect password")) {
+            } else if (e.getMessage().contains("unauthorized")) {
                 response.status(401);
             } else {
                 response.status(500);

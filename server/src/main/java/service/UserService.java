@@ -30,11 +30,11 @@ public class UserService {
         UserData username = dataAccess.getUser(user.username());
 
         if (username == null) {
-            throw new DataAccessException("Error: bad request");
+            throw new DataAccessException("Error: unauthorized");
         }
 
         if (!username.password().equals(user.password())) {
-            throw new DataAccessException("Error: incorrect password");
+            throw new DataAccessException("Error: unauthorized");
         }
 
         String auth = UUID.randomUUID().toString();
