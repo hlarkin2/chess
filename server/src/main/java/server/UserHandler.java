@@ -45,6 +45,12 @@ public class UserHandler {
     public void login(Context response) {
         UserData user = new Gson().fromJson(response.body(), UserData.class);
 
+        if (user.username() == null || user.password() == null) {
+            response.status(400);
+            response.result(new Gson().toJson(Map.of("message", "Error: bad request")));
+            return;
+        }
+
         try {
             AuthData authData = userService.login(user);
             response.status(200);
