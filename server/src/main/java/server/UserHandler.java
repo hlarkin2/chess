@@ -62,12 +62,12 @@ public class UserHandler {
     }
 
     public void logout(Context response) {
-        AuthData auth = new Gson().fromJson(response.body(), AuthData.class);
+        AuthData auth = new AuthData(response.header("authorization"), null);
 
         try {
-            AuthData authData = userService.logout(auth);
+            userService.logout(auth);
             response.status(200);
-            response.result(new Gson().toJson(authData));
+            response.result("{}");
         } catch (DataAccessException e) {
             if (e.getMessage().contains("unauthorized")) {
                 response.status(401);

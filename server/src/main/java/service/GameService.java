@@ -15,11 +15,22 @@ public class GameService {
         this.dataAccess = dataAccess;
     }
 
-    public Collection<GameData> listGames() throws DataAccessException {
+    public Collection<GameData> listGames(AuthData auth) throws DataAccessException {
+        if (dataAccess.getAuth(auth.authToken()) == null) {
+            throw new DataAccessException("Error: unauthorized");
+        }
         return dataAccess.listGames();
     }
 
-    public int createGame(String gameName) throws DataAccessException {
+    public int createGame(String gameName, AuthData auth) throws DataAccessException {
+        if (dataAccess.getAuth(auth.authToken()) == null) {
+            throw new DataAccessException("Error: unauthorized");
+        }
+
+        if (gameName == null) {
+            throw new DataAccessException("Error: bad request");
+        }
+
         int gameID = UUID.randomUUID().hashCode();
         GameData newGame = new GameData(gameID, null, null, gameName, new ChessGame());
         dataAccess.createGame(newGame);
@@ -31,23 +42,23 @@ public class GameService {
         AuthData userToken = dataAccess.getAuth(authToken.authToken());
 
         if (userToken == null) throw new DataAccessException("Error: unauthorized");
-        if (selectGame == null) throw new DataAccessException("Error: game doesn't exist yet");
+        if (selectGame == null) throw new DataAccessException("Error: bad request");
 
         if (!"WHITE".equals(playerColor) && !"BLACK".equals(playerColor)) {
-            throw new DataAccessException("Error: invalid color");
+            throw new DataAccessException("Error: bad request");
         }
 
         if (playerColor.equals("WHITE") && selectGame.whiteUsername() != null) {
-            throw new DataAccessException("Error: white is already in use");
+            throw new DataAccessException("Error: already taken");
         } else if (playerColor.equals("BLACK") && selectGame.blackUsername() != null) {
-            throw new DataAccessException("Error: black is already in use");
+            throw new DataAccessException("Error: already taken");
         }
 
         if (playerColor.equals("WHITE")) {
-            GameData newGame = new GameData(gameID, authToken.username(), selectGame.blackUsername(), selectGame.gameName(), selectGame.game());
+            GameData newGame = new GameData(gameID, userToken.username(), selectGame.blackUsername(), selectGame.gameName(), selectGame.game());
             dataAccess.updateGame(newGame);
         } else if (playerColor.equals("BLACK")) {
-            GameData newGame = new GameData(gameID, selectGame.whiteUsername(), authToken.username(), selectGame.gameName(), selectGame.game());
+            GameData newGame = new GameData(gameID, selectGame.whiteUsername(), userToken.username(), selectGame.gameName(), selectGame.game());
             dataAccess.updateGame(newGame);
         }
     }
