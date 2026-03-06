@@ -1,7 +1,10 @@
 package service;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
+import model.AuthData;
 import model.UserData;
+
+import java.util.UUID;
 
 public class UserService {
     private DataAccess dataAccess;
@@ -10,11 +13,41 @@ public class UserService {
         this.dataAccess = dataAccess;
     }
 
-    public void createUser(UserData user) throws DataAccessException {
+    public AuthData register(UserData user) throws DataAccessException {
+        UserData username = dataAccess.getUser(user.username());
+        if (username != null) {
+            throw new DataAccessException("Error: already taken");
+        }
         dataAccess.createUser(user);
+        String auth = UUID.randomUUID().toString();
+        AuthData authData = new AuthData(auth, user.username());
+        dataAccess.createAuth(authData);
+
+        return authData;
     }
 
-    public UserData getUser(UserData user) throws DataAccessException {
-        return dataAccess.getUser(user.username());
+    public AuthData login(UserData user) throws DataAccessException {
+        UserData username = dataAccess.getUser(user.username());
+
+        if (username == null) {
+            throw new DataAccessException("Error: user does not exist");
+        }
+
+        if (!username.password().equals(user.password())) {
+            throw new DataAccessException("Error: incorrect password");
+        }
+
+        String auth = UUID.randomUUID().toString();
+        AuthData authData = new AuthData(auth, username.username());
+        dataAccess.createAuth(authData);
+        return authData;
+    }
+
+    public void logout(AuthData token) throws DataAccessException {
+        if (dataAccess.getAuth(token.authToken()) == null) {
+            throw new DataAccessException("Error: no session to log out from");
+        }
+
+        dataAccess.deleteAuth(token);
     }
 }

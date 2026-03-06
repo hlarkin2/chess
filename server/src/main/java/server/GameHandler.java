@@ -4,30 +4,26 @@ import service.GameService;
 import io.javalin.http.Context;
 
 public class GameHandler {
-    private GameService listGames;
-    private GameService createGame;
-    private GameService joinGame;
+    private GameService gameService;
 
-    public GameHandler(GameService listGames, GameService createGame, GameService joinGame) {
-        this.listGames = listGames;
-        this.createGame = createGame;
-        this.joinGame = joinGame;
+    public GameHandler(GameService gameService) {
+        this.gameService = gameService;
     }
 
     public void listGames(Context response) {
-        listGames.listGames();
+        gameService.listGames();
         response.status(200);
         response.result(" { } ");
     }
 
     public void createGame(Context response) {
-        listGames.createGame();
+        gameService.createGame();
         response.status(200);
         response.result(" { } ");
     }
 
     public void joinGame(Context response) {
-        listGames.joinGame();
+        gameService.joinGame();
         response.status(200);
         response.result(" { } ");
     }

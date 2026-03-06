@@ -26,10 +26,29 @@ public class GameService {
         return gameID;
     }
 
-    public GameData joinGame(int gameID, AuthData authToken, String playerColor) throws DataAccessException {
+    public void joinGame(int gameID, AuthData authToken, String playerColor) throws DataAccessException {
         GameData selectGame = dataAccess.getGame(gameID);
         AuthData userToken = dataAccess.getAuth(authToken.authToken());
 
+        if (userToken == null) throw new DataAccessException("Error: unauthorized");
+        if (selectGame == null) throw new DataAccessException("Error: game doesn't exist yet");
 
+        if (!"WHITE".equals(playerColor) && !"BLACK".equals(playerColor)) {
+            throw new DataAccessException("Error: invalid color");
+        }
+
+        if (playerColor.equals("WHITE") && selectGame.whiteUsername() != null) {
+            throw new DataAccessException("Error: white is already in use");
+        } else if (playerColor.equals("BLACK") && selectGame.blackUsername() != null) {
+            throw new DataAccessException("Error: black is already in use");
+        }
+
+        if (playerColor.equals("WHITE")) {
+            GameData newGame = new GameData(gameID, authToken.username(), selectGame.blackUsername(), selectGame.gameName(), selectGame.game());
+            dataAccess.updateGame(newGame);
+        } else if (playerColor.equals("BLACK")) {
+            GameData newGame = new GameData(gameID, selectGame.whiteUsername(), authToken.username(), selectGame.gameName(), selectGame.game());
+            dataAccess.updateGame(newGame);
+        }
     }
 }
