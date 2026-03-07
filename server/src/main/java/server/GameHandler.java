@@ -6,9 +6,8 @@ import model.AuthData;
 import model.GameData;
 import service.GameService;
 import io.javalin.http.Context;
-import service.joinRequest;
+import service.JoinRequest;
 
-import javax.xml.crypto.Data;
 import java.util.Collection;
 import java.util.Map;
 
@@ -60,7 +59,7 @@ public class GameHandler {
 
     public void joinGame(Context response) {
         AuthData auth = new AuthData(response.header("authorization"), null);
-        joinRequest join = new Gson().fromJson(response.body(), joinRequest.class);
+        JoinRequest join = new Gson().fromJson(response.body(), JoinRequest.class);
 
         try {
             gameService.joinGame(join.gameID(), auth, join.playerColor());

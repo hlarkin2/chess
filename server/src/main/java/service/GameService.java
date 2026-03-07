@@ -41,8 +41,8 @@ public class GameService {
         GameData selectGame = dataAccess.getGame(gameID);
         AuthData userToken = dataAccess.getAuth(authToken.authToken());
 
-        if (userToken == null) throw new DataAccessException("Error: unauthorized");
-        if (selectGame == null) throw new DataAccessException("Error: bad request");
+        if (userToken == null) throw new DataAccessException("Error: unauthorized") {};
+        if (selectGame == null) throw new DataAccessException("Error: bad request") {};
 
         if (!"WHITE".equals(playerColor) && !"BLACK".equals(playerColor)) {
             throw new DataAccessException("Error: bad request");
