@@ -71,7 +71,7 @@ public class ChessGame {
                 boardCopy.addPiece(endPos, promoPiece);
             }
 
-            if (!isCopyInCheck(boardCopy, piece.getTeamColor())) {
+            if (!checkHelper(piece.getTeamColor(), boardCopy)) {
                 validMoves.add(move);
             }
         }
@@ -119,14 +119,8 @@ public class ChessGame {
         }
     }
 
-    /**
-     * Determines if the given team is in check
-     *
-     * @param teamColor which team to check for check
-     * @return True if the specified team is in check
-     */
-    public boolean isInCheck(TeamColor teamColor) {
-        ChessPosition kingPos = findKing(teamColor, this.board);
+    private boolean checkHelper(TeamColor teamColor, ChessBoard board) {
+        ChessPosition kingPos = findKing(teamColor, board);
 
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
@@ -146,25 +140,14 @@ public class ChessGame {
         return false;
     }
 
-    private boolean isCopyInCheck(ChessBoard board, TeamColor teamColor) {
-        ChessPosition kingPos = findKing(teamColor, board);
-
-        for (int row = 1; row <= 8; row++) {
-            for (int col = 1; col <= 8; col++) {
-                ChessPosition pos = new ChessPosition(row, col);
-                ChessPiece piece = board.getPiece(pos);
-                if (piece != null && piece.getTeamColor() != teamColor) {
-                    Collection<ChessMove> opponentMoves = piece.pieceMoves(board, pos);
-                    for(ChessMove move : opponentMoves) {
-                        ChessPosition endPos = move.getEndPosition();
-                        if (endPos.equals(kingPos)) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
+    /**
+     * Determines if the given team is in check
+     *
+     * @param teamColor which team to check for check
+     * @return True if the specified team is in check
+     */
+    public boolean isInCheck(TeamColor teamColor) {
+        return checkHelper(teamColor, this.board);
     }
 
     /**
