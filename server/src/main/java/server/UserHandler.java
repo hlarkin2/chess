@@ -31,14 +31,7 @@ public class UserHandler {
             response.status(200);
             response.result(new Gson().toJson(authData));
         } catch (DataAccessException e) {
-            if (e.getMessage().contains("already taken")) {
-                response.status(403);
-            } else if (e.getMessage().contains("unauthorized")) {
-                response.status(401);
-            } else {
-                response.status(500);
-            }
-            response.result(new Gson().toJson(Map.of("message", e.getMessage())));
+            HandlerUtils.handleError(response, e);
         }
     }
 
@@ -56,14 +49,7 @@ public class UserHandler {
             response.status(200);
             response.result(new Gson().toJson(authData));
         } catch (DataAccessException e) {
-            if (e.getMessage().contains("bad request")) {
-                response.status(400);
-            } else if (e.getMessage().contains("unauthorized")) {
-                response.status(401);
-            } else {
-                response.status(500);
-            }
-            response.result(new Gson().toJson(Map.of("message", e.getMessage())));
+            HandlerUtils.handleError(response, e);
         }
     }
 
@@ -75,12 +61,7 @@ public class UserHandler {
             response.status(200);
             response.result("{}");
         } catch (DataAccessException e) {
-            if (e.getMessage().contains("unauthorized")) {
-                response.status(401);
-            } else {
-                response.status(500);
-            }
-            response.result(new Gson().toJson(Map.of("message", e.getMessage())));
+            HandlerUtils.handleError(response, e);
         }
     }
 }

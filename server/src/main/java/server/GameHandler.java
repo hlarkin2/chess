@@ -26,12 +26,7 @@ public class GameHandler {
             response.status(200);
             response.result(new Gson().toJson(Map.of("games", list)));
         } catch (DataAccessException e) {
-            if (e.getMessage().contains("unauthorized")) {
-                response.status(401);
-            } else {
-                response.status(500);
-            }
-            response.result(new Gson().toJson(Map.of("message", e.getMessage())));
+            HandlerUtils.handleError(response, e);
         }
     }
 
@@ -45,16 +40,8 @@ public class GameHandler {
             response.status(200);
             response.result(new Gson().toJson(Map.of("gameID", gameID)));
         } catch (DataAccessException e) {
-            if (e.getMessage().contains("bad request")) {
-                response.status(400);
-            } else if (e.getMessage().contains("unauthorized")) {
-                response.status(401);
-            } else {
-                response.status(500);
-            }
-            response.result(new Gson().toJson(Map.of("message", e.getMessage())));
+            HandlerUtils.handleError(response, e);
         }
-
     }
 
     public void joinGame(Context response) {
@@ -66,16 +53,7 @@ public class GameHandler {
             response.status(200);
             response.result("{}");
         } catch (DataAccessException e) {
-            if (e.getMessage().contains("bad request")) {
-                response.status(400);
-            } else if (e.getMessage().contains("unauthorized")) {
-                response.status(401);
-            } else if (e.getMessage().contains("already taken")) {
-                response.status(403);
-            } else {
-                response.status(500);
-            }
-            response.result(new Gson().toJson(Map.of("message", e.getMessage())));
+            HandlerUtils.handleError(response, e);
         }
     }
 }

@@ -125,7 +125,7 @@ public class ChessPiece {
             for (int i = 1; i <=8; i++) {
                 int newRow = row + (d[0] * i);
                 int newCol = col + (d[1] * i);
-                if (newRow < 1 || newRow > 8 || newCol < 1 || newCol > 8) break;
+                if (newRow < 1 || newRow > 8 || newCol < 1 || newCol > 8) {break;}
 
                 ChessPosition newPos = new ChessPosition(newRow, newCol);
                 ChessPiece piece = board.getPiece(newPos);
