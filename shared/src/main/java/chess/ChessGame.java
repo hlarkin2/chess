@@ -128,11 +128,8 @@ public class ChessGame {
                 ChessPiece piece = board.getPiece(pos);
                 if (piece != null && piece.getTeamColor() != teamColor) {
                     Collection<ChessMove> opponentMoves = piece.pieceMoves(board, pos);
-                    for(ChessMove move : opponentMoves) {
-                        ChessPosition endPos = move.getEndPosition();
-                        if (endPos.equals(kingPos)) {
-                            return true;
-                        }
+                    if (opponentMoves.stream().anyMatch(m -> m.getEndPosition().equals(kingPos))) {
+                        return true;
                     }
                 }
             }
