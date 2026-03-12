@@ -1,4 +1,5 @@
 package dataaccess;
+import com.google.gson.Gson;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -141,7 +142,25 @@ public class DBDataAccess implements DataAccess {
 
     @Override
     public void createGame(GameData gameID) throws DataAccessException {
+        int gameid = gameID.gameID();
+        String whiteUser = gameID.whiteUsername();
+        String blackUser = gameID.blackUsername();
+        String name = gameID.gameName();
+        String game = new Gson().toJson(gameID.game());
 
+        String insertGame = "INSERT INTO GameData (gameID, whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?, ?);";
+
+        try (var conn = DatabaseManager.getConnection();
+             var preparedStatement = conn.prepareStatement(insertGame)) {
+            preparedStatement.setInt(1, gameid);
+            preparedStatement.setString(2, whiteUser);
+            preparedStatement.setString(3, blackUser);
+            preparedStatement.setString(4, name);
+            preparedStatement.setString(5, game);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("error with creating game", e);
+        }
     }
 
     @Override
