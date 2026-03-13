@@ -9,6 +9,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.mindrot.jbcrypt.BCrypt;
+
 
 public class DBDataAccess implements DataAccess {
 
@@ -26,7 +28,7 @@ public class DBDataAccess implements DataAccess {
              var preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataAccessException("failed to configure the database", e);
+            throw new DataAccessException("Error: failed to configure the database", e);
         }
     }
     private void configureDatabase() throws DataAccessException{
@@ -68,7 +70,7 @@ public class DBDataAccess implements DataAccess {
             preparedStatement.setString(3, email);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataAccessException("error with creating user", e);
+            throw new DataAccessException("Error with creating user", e);
         }
     }
 
@@ -88,7 +90,7 @@ public class DBDataAccess implements DataAccess {
                 }
             }
         } catch (SQLException e) {
-            throw new DataAccessException("error getting user", e);
+            throw new DataAccessException("Error getting user", e);
         }
         return null;
     }
@@ -104,7 +106,7 @@ public class DBDataAccess implements DataAccess {
             preparedStatement.setString(2, username);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataAccessException("error with creating authToken", e);
+            throw new DataAccessException("Error with creating authToken", e);
         }
     }
 
@@ -123,7 +125,7 @@ public class DBDataAccess implements DataAccess {
                 }
             }
         } catch (SQLException e) {
-            throw new DataAccessException("error getting token", e);
+            throw new DataAccessException("Error getting token", e);
         }
         return null;
     }
@@ -138,7 +140,7 @@ public class DBDataAccess implements DataAccess {
             preparedStatement.setString(1, token);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataAccessException("error getting token", e);
+            throw new DataAccessException("Error getting token", e);
         }
     }
 
@@ -161,7 +163,7 @@ public class DBDataAccess implements DataAccess {
             preparedStatement.setString(5, game);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataAccessException("error with creating game", e);
+            throw new DataAccessException("Error with creating game", e);
         }
     }
 
@@ -183,7 +185,7 @@ public class DBDataAccess implements DataAccess {
                 }
             }
         } catch (SQLException e) {
-            throw new DataAccessException("error getting game", e);
+            throw new DataAccessException("Error getting game", e);
         }
         return null;
     }
@@ -206,7 +208,7 @@ public class DBDataAccess implements DataAccess {
                 }
             }
         } catch (SQLException e) {
-            throw new DataAccessException("error getting token", e);
+            throw new DataAccessException("Error getting token", e);
         }
 
         return list;
@@ -230,7 +232,7 @@ public class DBDataAccess implements DataAccess {
             preparedStatement.setInt(5, gameid);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataAccessException("error getting game", e);
+            throw new DataAccessException("Error getting game", e);
         }
     }
 }

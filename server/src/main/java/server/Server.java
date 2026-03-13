@@ -1,5 +1,6 @@
 package server;
 
+import dataaccess.DBDataAccess;
 import dataaccess.DataAccess;
 import dataaccess.MemoryDataAccess;
 import io.javalin.*;
@@ -19,7 +20,7 @@ public class Server {
     private GameHandler gameHandler;
 
     public Server() {
-        dataAccess = new MemoryDataAccess();
+        dataAccess = new DBDataAccess();
         clearService = new ClearService(dataAccess);
         clearHandler = new ClearHandler(clearService);
         userService = new UserService(dataAccess);

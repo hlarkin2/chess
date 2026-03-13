@@ -5,6 +5,7 @@ import model.AuthData;
 import model.UserData;
 
 import java.util.UUID;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class UserService {
     private DataAccess dataAccess;
