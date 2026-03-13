@@ -33,7 +33,7 @@ public class UserService {
             throw new DataAccessException("Error: unauthorized");
         }
 
-        if (!username.password().equals(user.password())) {
+        if (!BCrypt.checkpw(user.password(), username.password())) {
             throw new DataAccessException("Error: unauthorized");
         }
 
