@@ -30,10 +30,9 @@ public class DatabaseAccessTests {
     @Test
     void createUserSuccess() throws DataAccessException {
         UserData user = new UserData("amy", "hello", "email@gmail.com");
-        dbAccess.createUser(user);
-        UserData userName = dbAccess.getUser(user.username());
-        Assertions.assertNotNull(userName);
-        Assertions.assertEquals(user.username() ,userName.username());
+        Assertions.assertDoesNotThrow(() -> {
+           dbAccess.createUser(user);
+        });
     }
 
     @Test
@@ -52,6 +51,7 @@ public class DatabaseAccessTests {
         UserData userName = dbAccess.getUser(user.username());
         Assertions.assertNotNull(userName);
         Assertions.assertEquals(user.username() ,userName.username());
+        Assertions.assertEquals(user.email() ,userName.email());
     }
 
     @Test
@@ -65,9 +65,9 @@ public class DatabaseAccessTests {
         UserData user = new UserData("amy", "hello", "email@gmail.com");
         dbAccess.createUser(user);
         AuthData token = new AuthData("sgwgwh2onfw354sgfosg6r", user.username());
-        dbAccess.createAuth(token);
-        AuthData auth = dbAccess.getAuth(token.authToken());
-        Assertions.assertNotNull(auth);
+        Assertions.assertDoesNotThrow(() -> {
+            dbAccess.createAuth(token);
+        });
     }
 
     @Test
@@ -89,6 +89,7 @@ public class DatabaseAccessTests {
         dbAccess.createAuth(token);
         AuthData auth = dbAccess.getAuth(token.authToken());
         Assertions.assertNotNull(auth);
+        Assertions.assertEquals(auth.username() ,token.username());
     }
 
     @Test

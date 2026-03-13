@@ -34,7 +34,8 @@ public class DBDataAccess implements DataAccess {
     private void configureDatabase() throws DataAccessException{
         String createUser = "CREATE TABLE IF NOT EXISTS UserData (username VARCHAR(50) PRIMARY KEY, password VARCHAR(60), email VARCHAR(50))";
         String createAuth = "CREATE TABLE IF NOT EXISTS AuthData (authToken VARCHAR(50) PRIMARY KEY, username VARCHAR(50))";
-        String createGame = "CREATE TABLE IF NOT EXISTS GameData (gameID INT PRIMARY KEY, whiteUsername VARCHAR(50), blackUsername VARCHAR(50), gameName VARCHAR(50), game TEXT)";
+        String createGame = "CREATE TABLE IF NOT EXISTS GameData (gameID INT PRIMARY KEY, whiteUsername VARCHAR(50)," +
+                " blackUsername VARCHAR(50), gameName VARCHAR(50), game TEXT)";
 
         submitConfig(createUser);
         submitConfig(createAuth);
