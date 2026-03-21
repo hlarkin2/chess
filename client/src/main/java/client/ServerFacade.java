@@ -21,9 +21,39 @@ public class ServerFacade {
         serverUrl = "http://localhost:" + port;
     }
 
+    public void clear() throws ResponseException {
+        var path = "/db";
+        this.makeRequest("DELETE", path, null, null, null);
+    }
+
     public AuthData register(UserData user) throws ResponseException {
         var path = "/user";
         return this.makeRequest("POST", path, user, AuthData.class, null);
+    }
+
+    public AuthData login(UserData user) throws ResponseException {
+        var path = "/session";
+        return this.makeRequest("POST", path, user, AuthData.class, null);
+    }
+
+    public void logout(AuthData auth) throws ResponseException {
+        var path = "/session";
+        this.makeRequest("DELETE", path, null, null, auth.authToken());
+    }
+
+    public GameData listGames(AuthData auth) throws ResponseException {
+        var path = "/game";
+        return this.makeRequest("GET", path, null, GameData.class, auth.authToken());
+    }
+
+    public GameData createGame(GameData game, AuthData auth) throws ResponseException {
+        var path = "/game";
+        return this.makeRequest("POST", path, game.gameName(), GameData.class, auth.authToken());
+    }
+
+    public void joinGame(GameData game, AuthData auth) throws ResponseException {
+        var path = "/game";
+        this.makeRequest("PUT", path, game.gameID(), GameData.class, auth.authToken());
     }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String token) throws ResponseException {
