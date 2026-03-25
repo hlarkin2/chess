@@ -12,10 +12,14 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 public class ServerFacade {
     private final String serverUrl;
     private record ErrorMessage(String message) {}
+    private record ListGamesResponse(List<GameData> games) {}
+    private record CreateGameResponse(int gameID) {}
 
     public ServerFacade(int port) {
         serverUrl = "http://localhost:" + port;
@@ -41,19 +45,23 @@ public class ServerFacade {
         this.makeRequest("DELETE", path, null, null, auth.authToken());
     }
 
-    public GameData listGames(AuthData auth) throws ResponseException {
+    public List<GameData> listGames(AuthData auth) throws ResponseException {
         var path = "/game";
-        return this.makeRequest("GET", path, null, GameData.class, auth.authToken());
+        ListGamesResponse list = makeRequest("GET", path, null, ListGamesResponse.class, auth.authToken());
+        return list.games();
     }
 
-    public GameData createGame(GameData game, AuthData auth) throws ResponseException {
+    public CreateGameResponse createGame(GameData game, AuthData auth) throws ResponseException {
         var path = "/game";
-        return this.makeRequest("POST", path, game.gameName(), GameData.class, auth.authToken());
+        Map name = Map.of("gameName", game.gameName());
+        CreateGameResponse response = makeRequest("POST", path, name, CreateGameResponse.class, auth.authToken());
+        return response;
     }
 
-    public void joinGame(GameData game, AuthData auth) throws ResponseException {
+    public void joinGame(GameData game, String playerColor, AuthData auth) throws ResponseException {
         var path = "/game";
-        this.makeRequest("PUT", path, game.gameID(), GameData.class, auth.authToken());
+        Map data = Map.of("gameID", game.gameID(), "playerColor", playerColor);
+        this.makeRequest("PUT", path, data, null, auth.authToken());
     }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String token) throws ResponseException {
