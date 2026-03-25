@@ -142,7 +142,7 @@ public class ServerFacadeTests {
         GameData game = new GameData(123, "white1", "black1", "firstGame", new ChessGame());
         var response = facade.createGame(game, result);
 
-        GameData game1 = new GameData(response.gameID(), "white1", "black1", "firstGame", new ChessGame());
+        GameData game1 = new GameData(response, "white1", "black1", "firstGame", new ChessGame());
 
         Assertions.assertDoesNotThrow(() -> facade.joinGame(game1, playerColor, result));
     }

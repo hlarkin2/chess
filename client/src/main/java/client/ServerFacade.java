@@ -51,11 +51,11 @@ public class ServerFacade {
         return list.games();
     }
 
-    public CreateGameResponse createGame(GameData game, AuthData auth) throws ResponseException {
+    public int createGame(GameData game, AuthData auth) throws ResponseException {
         var path = "/game";
         Map name = Map.of("gameName", game.gameName());
         CreateGameResponse response = makeRequest("POST", path, name, CreateGameResponse.class, auth.authToken());
-        return response;
+        return response.gameID();
     }
 
     public void joinGame(GameData game, String playerColor, AuthData auth) throws ResponseException {
