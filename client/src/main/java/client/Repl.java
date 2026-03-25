@@ -2,7 +2,7 @@ package client;
 
 import java.util.Scanner;
 
-import static client.EscapeSequences.*;
+import static ui.EscapeSequences.*;
 
 public class Repl {
     private final ChessClient client;
@@ -23,7 +23,7 @@ public class Repl {
 
             try {
                 result = client.eval(line);
-                System.out.println(GREEN + result);
+                System.out.println(SET_TEXT_COLOR_MAGENTA + result);
             } catch (Throwable e) {
                 var message = e.toString();
                 System.out.println(message);
@@ -33,6 +33,6 @@ public class Repl {
     }
 
     private void printPrompt() {
-        System.out.println("\n" + RESET + ">>>" + GREEN);
+        System.out.println("\n" + RESET_TEXT_COLOR + ">>>" + SET_TEXT_COLOR_MAGENTA);
     }
 }

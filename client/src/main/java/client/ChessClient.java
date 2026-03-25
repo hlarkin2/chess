@@ -1,5 +1,6 @@
 package client;
 
+import chess.ChessGame;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -95,7 +96,12 @@ public class ChessClient {
         AuthData auth = new AuthData(authToken, username);
         Collection<GameData> games = server.listGames(auth);
         gameList = new ArrayList<>(games);
-        return String.format("Available games: %s", games);
+        StringBuilder result = new StringBuilder();
+        for (int num = 0; num < gameList.size(); num++) {
+            GameData game = gameList.get(num);
+            result.append(String.format("%d. %s | White: %s | Black: %s\n", num + 1, game.gameName(), game.whiteUsername(), game.blackUsername()));
+        }
+        return result.toString();
     }
 
     public String playGame(String... params) throws ResponseException {
@@ -105,7 +111,9 @@ public class ChessClient {
             int gameNum = Integer.parseInt(params[0]);
             try {
                 GameData game = gameList.get(gameNum - 1);
-                server.joinGame(game, params[1], auth);
+                server.joinGame(game, params[1].toUpperCase(), auth);
+                ChessGame.TeamColor color = params[1].equalsIgnoreCase("BLACK") ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
+                new BoardRenderer(game.game().getBoard(), color).render();
                 return String.format("Joining game: %s", params[0]);
             } catch (IndexOutOfBoundsException e) {
                 throw new ResponseException("Error: Invalid game number.");
@@ -120,6 +128,7 @@ public class ChessClient {
             int gameNum = Integer.parseInt(params[0]);
             try {
                 GameData game = gameList.get(gameNum - 1);
+                new BoardRenderer(game.game().getBoard(), ChessGame.TeamColor.WHITE).render();
                 return String.format("Observing game: %s", params[0]);
             } catch (IndexOutOfBoundsException e) {
                 throw new ResponseException("Error: Invalid game number.");
