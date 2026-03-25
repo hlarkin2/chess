@@ -83,7 +83,7 @@ public class ChessClient {
         if (params.length >= 1) {
             assertLoggedIn();
             AuthData auth = new AuthData(authToken, username);
-            GameData game = new GameData(0, null, null, null, params[0]);
+            GameData game = new GameData(0, null, null, params[0], null);
             server.createGame(game, auth);
             return String.format("Created new game: %s", params[0]);
         }
@@ -103,14 +103,29 @@ public class ChessClient {
             assertLoggedIn();
             AuthData auth = new AuthData(authToken, username);
             int gameNum = Integer.parseInt(params[0]);
-            int gameID = gameList.get(gameNum);
-            return String.format("Joining game: %s", params[0]);
+            try {
+                GameData game = gameList.get(gameNum - 1);
+                server.joinGame(game, params[1], auth);
+                return String.format("Joining game: %s", params[0]);
+            } catch (IndexOutOfBoundsException e) {
+                throw new ResponseException("Error: Invalid game number.");
+            }
         }
         throw new ResponseException("Error with joining the game.");
     }
 
     public String observeGame(String... params) throws ResponseException {
-
+        if (params.length >= 1) {
+            assertLoggedIn();
+            int gameNum = Integer.parseInt(params[0]);
+            try {
+                GameData game = gameList.get(gameNum - 1);
+                return String.format("Observing game: %s", params[0]);
+            } catch (IndexOutOfBoundsException e) {
+                throw new ResponseException("Error: Invalid game number.");
+            }
+        }
+        throw new ResponseException("Error with viewing the game.");
     }
 
     public String help() {

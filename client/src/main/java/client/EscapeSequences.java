@@ -8,4 +8,7 @@ public class EscapeSequences {
     public static final String BLUE = ESCAPE + "34m";
     public static final String RED = ESCAPE + "31m";
     public static final String RESET = ESCAPE + "0m";
+    public static final String BG_LIGHT = ESCAPE + "47m";
+    public static final String BG_DARK = ESCAPE + "44m";
+
 }
