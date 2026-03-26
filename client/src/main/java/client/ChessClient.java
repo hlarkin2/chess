@@ -108,8 +108,8 @@ public class ChessClient {
         if (params.length >= 2) {
             assertLoggedIn();
             AuthData auth = new AuthData(authToken, username);
-            int gameNum = Integer.parseInt(params[0]);
             try {
+                int gameNum = Integer.parseInt(params[0]);
                 GameData game = gameList.get(gameNum - 1);
                 server.joinGame(game, params[1].toUpperCase(), auth);
                 ChessGame.TeamColor color = params[1].equalsIgnoreCase("BLACK") ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
