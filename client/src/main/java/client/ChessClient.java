@@ -17,8 +17,8 @@ public class ChessClient {
     private State state = State.SIGNEDOUT;
     private List<GameData> gameList = new ArrayList<>();
 
-    public ChessClient(String ServerUrl) throws ResponseException {
-        server = new ServerFacade(ServerUrl);
+    public ChessClient(String serverUrl) throws ResponseException {
+        server = new ServerFacade(serverUrl);
     }
 
     public String eval(String input) {
