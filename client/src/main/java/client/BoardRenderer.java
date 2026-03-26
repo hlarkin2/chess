@@ -33,7 +33,7 @@ public class BoardRenderer {
                 String bgColor = (row + col) % 2 == 0 ? SET_BG_COLOR_WHITE : SET_BG_COLOR_DARK_GREEN;
                 ChessPiece piece = board.getPiece(new ChessPosition(row, col));
                 String chessman = piece == null ? EMPTY : getChessman(piece);
-                System.out.print(bgColor + chessman);
+                System.out.print(bgColor + chessman + " ");
             }
 
             System.out.print(SET_BG_COLOR_LIGHT_GREY + " " + row + " " + RESET_BG_COLOR);
@@ -58,7 +58,7 @@ public class BoardRenderer {
 
         for (int col = startCol; col != endCol; col += shiftCol) {
             char letter = (char) ('a' + col - 1);
-            System.out.print(SET_BG_COLOR_LIGHT_GREY + " " + letter + " ");
+            System.out.print(SET_BG_COLOR_LIGHT_GREY + "  " + letter + "  ");
         }
         System.out.print(RESET_BG_COLOR);
         System.out.println();
