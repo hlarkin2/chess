@@ -117,6 +117,8 @@ public class ChessClient {
                 return String.format("Joining game: %s", params[0]);
             } catch (IndexOutOfBoundsException e) {
                 throw new ResponseException("Error: Invalid game number.");
+            } catch (NumberFormatException e) {
+                throw new ResponseException("Expected: play <game number> <color>");
             }
         }
         throw new ResponseException("Error with joining the game.");

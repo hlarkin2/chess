@@ -27,34 +27,35 @@ public class BoardRenderer {
         printColHeaders(startCol, endCol, shiftCol);
 
         for (int row = startRow; row != endRow; row+= shift) {
-            System.out.print(SET_BG_COLOR_LIGHT_GREY + " " + row + " ");
+            System.out.print(SET_BG_COLOR_LIGHT_GREY + RESET_TEXT_COLOR + " " + row + " ");
 
             for (int col = startCol; col != endCol; col += shiftCol) {
-                String bgColor = (row + col) % 2 == 0 ? SET_BG_COLOR_WHITE : SET_BG_COLOR_DARK_GREEN;
+                String bgColor = (row + col) % 2 == 0 ? SET_BG_COLOR_DARK_GREEN : SET_BG_COLOR_WHITE;
                 ChessPiece piece = board.getPiece(new ChessPosition(row, col));
                 String chessman = piece == null ? EMPTY : getChessman(piece);
                 System.out.print(bgColor + chessman + " ");
             }
 
-            System.out.print(SET_BG_COLOR_LIGHT_GREY + " " + row + " " + RESET_BG_COLOR);
+            System.out.print(SET_BG_COLOR_LIGHT_GREY + RESET_TEXT_COLOR  + " " + row + " " + RESET_BG_COLOR);
             System.out.println();
         }
         printColHeaders(startCol, endCol, shiftCol);
     }
 
     private String getChessman(ChessPiece piece) {
+        String color = piece.getTeamColor() == ChessGame.TeamColor.WHITE ? SET_TEXT_COLOR_RED : SET_TEXT_COLOR_BLUE;
         return switch (piece.getPieceType()) {
-            case KING -> piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_KING : BLACK_KING;
-            case QUEEN -> piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_QUEEN : BLACK_QUEEN;
-            case BISHOP -> piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_BISHOP : BLACK_BISHOP;
-            case KNIGHT -> piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_KNIGHT : BLACK_KNIGHT;
-            case ROOK -> piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_ROOK : BLACK_ROOK;
-            case PAWN -> piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_PAWN : BLACK_PAWN;
+            case KING -> color + (piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_KING : BLACK_KING) + RESET_TEXT_COLOR;
+            case QUEEN -> color + (piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_QUEEN : BLACK_QUEEN) + RESET_TEXT_COLOR;
+            case BISHOP -> color + (piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_BISHOP : BLACK_BISHOP) + RESET_TEXT_COLOR;
+            case KNIGHT -> color + (piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_KNIGHT : BLACK_KNIGHT) + RESET_TEXT_COLOR;
+            case ROOK -> color + (piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_ROOK : BLACK_ROOK) + RESET_TEXT_COLOR;
+            case PAWN -> color + (piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_PAWN : BLACK_PAWN) + RESET_TEXT_COLOR;
         };
     }
 
     private void printColHeaders(int startCol, int endCol, int shiftCol) {
-        System.out.print(SET_BG_COLOR_LIGHT_GREY + "   ");
+        System.out.print(SET_BG_COLOR_LIGHT_GREY + RESET_TEXT_COLOR + "   ");
 
         for (int col = startCol; col != endCol; col += shiftCol) {
             char letter = (char) ('a' + col - 1);

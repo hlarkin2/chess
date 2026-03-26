@@ -103,7 +103,7 @@ public class ServerFacade {
             InputStream errorStream = http.getErrorStream();
             InputStreamReader reader = new InputStreamReader(errorStream);
             ErrorMessage message = new Gson().fromJson(reader, ErrorMessage.class);
-            throw new ResponseException("Error " + status + ": " + message.message());
+            throw new ResponseException(message.message());
         }
     }
 
