@@ -18,6 +18,8 @@ public class Server {
     private UserHandler userHandler;
     private GameService gameService;
     private GameHandler gameHandler;
+    private WebSocketHandler webSocketHandler;
+    private ConnectionManager connectionManager;
 
     public Server() {
         dataAccess = new DBDataAccess();
@@ -27,6 +29,8 @@ public class Server {
         userHandler = new UserHandler(userService);
         gameService = new GameService(dataAccess);
         gameHandler = new GameHandler(gameService);
+        connectionManager = new ConnectionManager();
+        webSocketHandler = new WebSocketHandler(connectionManager, dataAccess);
 
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
 
@@ -37,6 +41,7 @@ public class Server {
         javalin.get("/game", gameHandler::listGames);
         javalin.post("/game", gameHandler::createGame);
         javalin.put("/game", gameHandler::joinGame);
+        javalin.ws("/ws", ws -> {ws.onMessage(webSocketHandler::onMessage); });
 
     }
 
