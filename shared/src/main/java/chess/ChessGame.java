@@ -13,6 +13,7 @@ import java.util.Objects;
 public class ChessGame {
     private ChessBoard board;
     private TeamColor currentTurn;
+    private boolean gameOver;
 
     public ChessGame() {
         this.board = new ChessBoard();
@@ -220,6 +221,16 @@ public class ChessGame {
             }
         }
         return null;
+    }
+
+    public boolean isGameOver() {
+        return isInStalemate(TeamColor.WHITE) || isInStalemate(TeamColor.BLACK)
+                || isInCheckmate(TeamColor.WHITE) || isInCheckmate(TeamColor.BLACK)
+                || gameOver;
+    }
+
+    public void setGameEnded() {
+        gameOver = true;
     }
 
     @Override
