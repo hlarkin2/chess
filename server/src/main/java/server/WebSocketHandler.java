@@ -51,8 +51,17 @@ public class WebSocketHandler {
             connectionManager.add(command.getGameID(), session);
             session.getRemote().sendString(new Gson().toJson(new LoadGameMessage(game.game())));
 
-            NotificationMessage message = new Gson().toJson("Connecting to game");
-            connectionManager.broadcast(game.gameID(), message, session);
+            String user;
+            if (auth.username().equals(game.whiteUsername())) {
+                user = game.whiteUsername();
+            } else if (auth.username().equals(game.blackUsername())) {
+                user = game.blackUsername();
+            } else {
+                user = "observer";
+            }
+
+            NotificationMessage message = new NotificationMessage("Connecting " + user + " to the game");
+            connectionManager.broadcast(game.gameID(), new Gson().toJson(message), session);
 
         } catch (DataAccessException message) {
             session.getRemote().sendString(new Gson().toJson(new ErrorMessage("Error: unable to connect")));
