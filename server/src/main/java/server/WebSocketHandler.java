@@ -1,6 +1,8 @@
 package server;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
@@ -8,6 +10,7 @@ import io.javalin.websocket.WsMessageContext;
 import model.AuthData;
 import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
+import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
@@ -68,8 +71,57 @@ public class WebSocketHandler {
         }
     }
 
-    private void handleMakeMove(Session session, UserGameCommand command) {
+    private void handleMakeMove(Session session, UserGameCommand command) throws IOException {
+        try {
+            AuthData auth = dataAccess.getAuth(command.getAuthToken());
+            GameData game = dataAccess.getGame(command.getGameID());
 
+            if (auth == null || game == null) {
+                session.getRemote().sendString(new Gson().toJson(new ErrorMessage("Error: unable find session")));
+                return;
+            }
+
+            String user;
+            if (auth.username().equals(game.whiteUsername())) {
+                user = game.whiteUsername();
+            } else if (auth.username().equals(game.blackUsername())) {
+                user = game.blackUsername();
+            } else {
+                user = "observer";
+            }
+
+            if (game.game().isGameOver()) {
+                session.getRemote().sendString(new Gson().toJson(new ErrorMessage("Error: unable to join ended game")));
+                return;
+            }
+
+            ChessMove move = ((MakeMoveCommand) command).getMove();
+
+            try {
+                game.game().makeMove(move);
+            } catch (InvalidMoveException message) {
+                session.getRemote().sendString(new Gson().toJson(new ErrorMessage("Error: invalid move")));
+                return;
+            }
+
+            dataAccess.updateGame(game);
+
+            NotificationMessage message = new NotificationMessage(user + " made the move: " + move);
+            connectionManager.broadcast(game.gameID(), new Gson().toJson(message), session);
+            connectionManager.broadcast(game.gameID(), new Gson().toJson(new LoadGameMessage(game.game())), null);
+
+            ChessGame.TeamColor opponent = game.game().getTeamTurn();
+            if (game.game().isInCheckmate(opponent)) {
+                connectionManager.broadcast(game.gameID(), new Gson().toJson(opponent + " is in checkmate"), session);
+            } else if (game.game().isInStalemate(opponent)) {
+                connectionManager.broadcast(game.gameID(), new Gson().toJson(opponent + " is in stalemate"), session);
+            } else if (game.game().isInCheck(opponent)) {
+                connectionManager.broadcast(game.gameID(), new Gson().toJson(opponent + " is in check"), session);
+            }
+
+        } catch (DataAccessException message) {
+            session.getRemote().sendString(new Gson().toJson(new ErrorMessage("Error: unable to connect")));
+        }
     }
 
     private void handleLeave(Session session, UserGameCommand command) {
