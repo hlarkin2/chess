@@ -2,6 +2,7 @@ package server;
 
 import org.eclipse.jetty.websocket.api.Session;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -15,10 +16,21 @@ public class ConnectionManager {
     }
 
     public void remove(int gameID, Session session) {
-        games.remove(gameID);
+        games.get(gameID).remove(session);
     }
 
-    public void broadcast(int gameID, String message, Session excludeSession) {
+    public void broadcast(int gameID, String message, Session excludeSession) throws IOException {
+        Set<Session> sessions = games.get(gameID);
+        if (sessions == null) {
+            return;
+        }
 
+        for (Session session : sessions) {
+            if (session.equals(excludeSession)) {
+                continue;
+            }
+
+            session.getRemote().sendString(message);
+        }
     }
 }
