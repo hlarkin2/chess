@@ -112,11 +112,15 @@ public class WebSocketHandler {
 
             ChessGame.TeamColor opponent = game.game().getTeamTurn();
             if (game.game().isInCheckmate(opponent)) {
-                connectionManager.broadcast(game.gameID(), new Gson().toJson(opponent + " is in checkmate"), session);
+                game.game().setGameEnded();
+                dataAccess.updateGame(game);
+                connectionManager.broadcast(game.gameID(), new Gson().toJson(new NotificationMessage(opponent + " is in checkmate")), null);
             } else if (game.game().isInStalemate(opponent)) {
-                connectionManager.broadcast(game.gameID(), new Gson().toJson(opponent + " is in stalemate"), session);
+                game.game().setGameEnded();
+                dataAccess.updateGame(game);
+                connectionManager.broadcast(game.gameID(), new Gson().toJson(new NotificationMessage(opponent + " is in stalemate")), null);
             } else if (game.game().isInCheck(opponent)) {
-                connectionManager.broadcast(game.gameID(), new Gson().toJson(opponent + " is in check"), session);
+                connectionManager.broadcast(game.gameID(), new Gson().toJson(new NotificationMessage(opponent + " is in check")), null);
             }
 
         } catch (DataAccessException message) {
@@ -124,8 +128,42 @@ public class WebSocketHandler {
         }
     }
 
-    private void handleLeave(Session session, UserGameCommand command) {
+    private void handleLeave(Session session, UserGameCommand command) throws IOException {
+        try {
+            AuthData auth = dataAccess.getAuth(command.getAuthToken());
+            GameData game = dataAccess.getGame(command.getGameID());
 
+            if (auth == null || game == null) {
+                session.getRemote().sendString(new Gson().toJson(new ErrorMessage("Error: unable find session")));
+                return;
+            }
+
+            String user;
+            if (auth.username().equals(game.whiteUsername())) {
+                user = game.whiteUsername();
+            } else if (auth.username().equals(game.blackUsername())) {
+                user = game.blackUsername();
+            } else {
+                user = "observer";
+            }
+
+            GameData updatedGame = game;
+
+            if (!user.equals("observer")) {
+                if (auth.username().equals(game.whiteUsername())) {
+                    updatedGame = new GameData(game.gameID(), null, game.blackUsername(), game.gameName(), game.game());
+                } else if (auth.username().equals(game.blackUsername())) {
+                    updatedGame = new GameData(game.gameID(), game.whiteUsername(), null, game.gameName(), game.game());
+                }
+                dataAccess.updateGame(updatedGame);
+            }
+
+            connectionManager.remove(game.gameID(), session);
+            connectionManager.broadcast(game.gameID(), new Gson().toJson(new NotificationMessage(auth.username() + " left the game")), session);
+
+        } catch (DataAccessException message) {
+            session.getRemote().sendString(new Gson().toJson(new ErrorMessage("Error: error with leaving game")));
+        }
     }
 
     private void handleResign(Session session, UserGameCommand command) {
