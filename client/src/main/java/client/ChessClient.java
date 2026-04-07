@@ -25,6 +25,7 @@ public class ChessClient {
 
     public ChessClient(String serverUrl) throws ResponseException {
         server = new ServerFacade(serverUrl);
+        server.setClient(this);
     }
 
     public String eval(String input) {
@@ -277,6 +278,10 @@ public class ChessClient {
         }
         throw new ResponseException("Error: Expected move <from> <to>");
 
+    }
+
+    public void setCurrentGame(ChessGame game) {
+        this.currentGame = game;
     }
 
 }

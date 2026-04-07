@@ -5,6 +5,9 @@ import model.AuthData;
 import model.UserData;
 import model.GameData;
 import websocket.commands.UserGameCommand;
+import websocket.messages.LoadGameMessage;
+import websocket.messages.NotificationMessage;
+import websocket.messages.ErrorMessage;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
@@ -19,10 +22,11 @@ import java.util.Map;
 
 public class ServerFacade implements ServerMessageObserver {
     private final String serverUrl;
-    private record ErrorMessage(String message) {}
+    private record HttpErrorMessage(String message) {}
     private record ListGamesResponse(List<GameData> games) {}
     private record CreateGameResponse(int gameID) {}
     private WebSocketCommunicator webSocketCommunicator;
+    private ChessClient client;
 
     public ServerFacade(int port) {
         serverUrl = "http://localhost:" + port;
@@ -105,7 +109,7 @@ public class ServerFacade implements ServerMessageObserver {
         if (!isSuccessful(status)) {
             InputStream errorStream = http.getErrorStream();
             InputStreamReader reader = new InputStreamReader(errorStream);
-            ErrorMessage message = new Gson().fromJson(reader, ErrorMessage.class);
+            HttpErrorMessage message = new Gson().fromJson(reader, HttpErrorMessage.class);
             throw new ResponseException(message.message());
         }
     }
@@ -135,6 +139,24 @@ public class ServerFacade implements ServerMessageObserver {
     }
 
     public void notify(ServerMessage message) {
+        switch (message.getServerMessageType()) {
+            case LOAD_GAME -> {
+                LoadGameMessage loadMessage = (LoadGameMessage) message;
+                client.setCurrentGame(loadMessage.getGame());
+                client.redraw();
+            }
+            case NOTIFICATION -> {
+                NotificationMessage notifMessage = (NotificationMessage) message;
+                System.out.println(notifMessage.getMessage());
+            }
+            case ERROR -> {
+                ErrorMessage errMessage = (ErrorMessage) message;
+                System.out.println(errMessage.getErrorMessage());
+            }
+        }
+    }
 
+    public void setClient(ChessClient client) {
+        this.client = client;
     }
 }
