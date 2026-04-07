@@ -16,6 +16,8 @@ public class ChessClient {
     private final ServerFacade server;
     private State state = State.SIGNEDOUT;
     private List<GameData> gameList = new ArrayList<>();
+    private int currentGameID;
+    private ChessGame.TeamColor playerColor;
 
     public ChessClient(String serverUrl) throws ResponseException {
         server = new ServerFacade(serverUrl);
@@ -35,6 +37,11 @@ public class ChessClient {
                 case "play" -> playGame(params);
                 case "observe" -> observeGame(params);
                 case "logout" -> logout();
+                case "redraw" -> redraw();
+                case "leave" -> leave();
+                case "move" -> move();
+                case "resign" -> resign();
+                case "highlight" -> highlight();
                 default -> help();
             };
         } catch (ResponseException e) {
@@ -114,11 +121,17 @@ public class ChessClient {
                 server.joinGame(game, params[1].toUpperCase(), auth);
                 ChessGame.TeamColor color = params[1].equalsIgnoreCase("BLACK") ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
                 new BoardRenderer(game.game().getBoard(), color).render();
+                state = State.GAMEPLAY;
+                currentGameID = game.gameID();
+                playerColor = color;
+                server.connectToGame(game.gameID(), auth.authToken());
                 return String.format("Joining game: %s", params[0]);
             } catch (IndexOutOfBoundsException e) {
                 throw new ResponseException("Error: Invalid game number.");
             } catch (NumberFormatException e) {
                 throw new ResponseException("Expected: play <game number> <color>");
+            } catch (Exception e) {
+                throw new ResponseException("Error: unable to connect");
             }
         }
         throw new ResponseException("Error with joining the game.");
@@ -131,9 +144,15 @@ public class ChessClient {
             try {
                 GameData game = gameList.get(gameNum - 1);
                 new BoardRenderer(game.game().getBoard(), ChessGame.TeamColor.WHITE).render();
+                state = State.GAMEPLAY;
+                currentGameID = game.gameID();
+                playerColor = ChessGame.TeamColor.WHITE;
+                server.connectToGame(game.gameID(), authToken);
                 return String.format("Observing game: %s", params[0]);
             } catch (IndexOutOfBoundsException e) {
                 throw new ResponseException("Error: Invalid game number.");
+            } catch (Exception e) {
+                throw new ResponseException("Error: unable to connect");
             }
         }
         throw new ResponseException("Error with viewing the game.");
@@ -147,6 +166,17 @@ public class ChessClient {
                     - quit
                     """;
         }
+
+        if (state == State.GAMEPLAY) {
+            return """
+                    - redraw
+                    - leave
+                    - move
+                    - resign
+                    - highlight
+                    """;
+        }
+
         return """
                 - create game
                 - list games
@@ -161,4 +191,25 @@ public class ChessClient {
             throw new ResponseException("Sign in.");
         }
     }
+
+    public void redraw() {
+
+    }
+
+    public void leave() {
+
+    }
+
+    public void resign() {
+
+    }
+
+    public void move(String... params) {
+
+    }
+
+    public void highlight(String... params) {
+
+    }
+
 }

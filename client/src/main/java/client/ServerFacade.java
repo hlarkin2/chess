@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import model.AuthData;
 import model.UserData;
 import model.GameData;
+import websocket.commands.UserGameCommand;
+import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,11 +17,12 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-public class ServerFacade {
+public class ServerFacade implements ServerMessageObserver {
     private final String serverUrl;
     private record ErrorMessage(String message) {}
     private record ListGamesResponse(List<GameData> games) {}
     private record CreateGameResponse(int gameID) {}
+    private WebSocketCommunicator webSocketCommunicator;
 
     public ServerFacade(int port) {
         serverUrl = "http://localhost:" + port;
@@ -120,5 +123,18 @@ public class ServerFacade {
 
     private boolean isSuccessful(int status) {
         return status / 100 == 2;
+    }
+
+    public void connectToGame(int gameID, String authToken) throws Exception {
+        webSocketCommunicator = new WebSocketCommunicator(this, serverUrl.replace("http", "ws"));
+        sendCommand(new UserGameCommand(UserGameCommand.CommandType.CONNECT, authToken, gameID));
+    }
+
+    public void sendCommand(UserGameCommand command) throws IOException {
+        webSocketCommunicator.send(new Gson().toJson(command));
+    }
+
+    public void notify(ServerMessage message) {
+
     }
 }
