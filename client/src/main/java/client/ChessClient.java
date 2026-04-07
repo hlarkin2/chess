@@ -1,9 +1,13 @@
 package client;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPiece;
+import chess.ChessPosition;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
+import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
 
 import java.io.IOException;
@@ -224,8 +228,31 @@ public class ChessClient {
         return username + " has resigned";
     }
 
-    public String move(String... params) {
+    public String move(String... params) throws ResponseException {
+        if (params.length == 2) {
+            try {
+                String startPos = params[0];
+                String endPos = params[1];
 
+                int startRow = Character.getNumericValue(startPos.charAt(1));
+                int startCol = startPos.charAt(0) - 'a' + 1;
+                int endRow = Character.getNumericValue(endPos.charAt(1));
+                int endCol = endPos.charAt(0) - 'a' + 1;
+
+                ChessPosition startingPos = new ChessPosition(startRow, startCol);
+                ChessPosition endingPos = new ChessPosition(endRow, endCol);
+
+                ChessMove newMove = new ChessMove(startingPos, endingPos, null);
+                MakeMoveCommand command = new MakeMoveCommand(newMove, authToken, currentGameID);
+                server.sendCommand(command);
+
+                return "Move made";
+
+            } catch (IOException e) {
+                throw new ResponseException(e.getMessage());
+            }
+        }
+        throw new ResponseException("Error: Expected move <from> <to>");
     }
 
     public String highlight(String... params) {
