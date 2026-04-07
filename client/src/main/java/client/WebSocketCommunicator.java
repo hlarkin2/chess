@@ -3,6 +3,9 @@ package client;
 import com.google.gson.Gson;
 import jakarta.websocket.*;
 import jakarta.websocket.ContainerProvider;
+import websocket.messages.ErrorMessage;
+import websocket.messages.LoadGameMessage;
+import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
@@ -26,6 +29,12 @@ public class WebSocketCommunicator {
 
     @OnMessage
     public void onMessage(String message) {
-        observer.notify(new Gson().fromJson(message, ServerMessage.class));
+        ServerMessage msg = new Gson().fromJson(message, ServerMessage.class);
+
+        switch (msg.getServerMessageType()) {
+            case NOTIFICATION -> observer.notify(new Gson().fromJson(message, NotificationMessage.class));
+            case ERROR -> observer.notify(new Gson().fromJson(message, ErrorMessage.class));
+            case LOAD_GAME -> observer.notify(new Gson().fromJson(message, LoadGameMessage.class));
+        }
     }
 }
