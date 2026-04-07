@@ -4,7 +4,9 @@ import chess.ChessGame;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
+import websocket.commands.UserGameCommand;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -18,6 +20,7 @@ public class ChessClient {
     private List<GameData> gameList = new ArrayList<>();
     private int currentGameID;
     private ChessGame.TeamColor playerColor;
+    private ChessGame currentGame;
 
     public ChessClient(String serverUrl) throws ResponseException {
         server = new ServerFacade(serverUrl);
@@ -124,6 +127,7 @@ public class ChessClient {
                 state = State.GAMEPLAY;
                 currentGameID = game.gameID();
                 playerColor = color;
+                currentGame = game.game();
                 server.connectToGame(game.gameID(), auth.authToken());
                 return String.format("Joining game: %s", params[0]);
             } catch (IndexOutOfBoundsException e) {
@@ -147,6 +151,7 @@ public class ChessClient {
                 state = State.GAMEPLAY;
                 currentGameID = game.gameID();
                 playerColor = ChessGame.TeamColor.WHITE;
+                currentGame = game.game();
                 server.connectToGame(game.gameID(), authToken);
                 return String.format("Observing game: %s", params[0]);
             } catch (IndexOutOfBoundsException e) {
@@ -192,23 +197,31 @@ public class ChessClient {
         }
     }
 
-    public void redraw() {
+    public String redraw() {
+        return new BoardRenderer(currentGame.getBoard(), playerColor).render();
+    }
+
+    public String leave() throws ResponseException {
+        UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, currentGameID);
+        try {
+            server.sendCommand(command);
+        } catch (IOException e) {
+            throw new ResponseException(e.getMessage());
+        }
+        state = State.SIGNEDIN;
+
+        return "Left game";
+    }
+
+    public String resign() {
 
     }
 
-    public void leave() {
+    public String move(String... params) {
 
     }
 
-    public void resign() {
-
-    }
-
-    public void move(String... params) {
-
-    }
-
-    public void highlight(String... params) {
+    public String highlight(String... params) {
 
     }
 
