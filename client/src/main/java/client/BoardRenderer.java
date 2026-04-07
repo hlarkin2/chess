@@ -1,16 +1,21 @@
 package client;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
+import java.util.Collection;
 import static ui.EscapeSequences.*;
 
 public class BoardRenderer {
     private ChessBoard board;
     private ChessGame.TeamColor teamColor;
+    private Collection<ChessMove> highlightMoves;
 
     public BoardRenderer(ChessBoard board, ChessGame.TeamColor teamColor) {
+        this.board = board;
+        this.teamColor = teamColor;
+    }
+
+    public BoardRenderer(Collection<ChessMove> highlightMoves, ChessBoard board, ChessGame.TeamColor teamColor) {
+        this.highlightMoves = highlightMoves;
         this.board = board;
         this.teamColor = teamColor;
     }
@@ -31,6 +36,15 @@ public class BoardRenderer {
 
             for (int col = startCol; col != endCol; col += shiftCol) {
                 String bgColor = (row + col) % 2 == 0 ? SET_BG_COLOR_DARK_GREEN : SET_BG_COLOR_WHITE;
+                if (highlightMoves != null) {
+                    for (ChessMove move : highlightMoves) {
+                        if (move.getEndPosition().getRow() == row && move.getEndPosition().getColumn() == col) {
+                            bgColor = SET_BG_COLOR_MAGENTA;
+                            break;
+                        }
+                    }
+                }
+
                 ChessPiece piece = board.getPiece(new ChessPosition(row, col));
                 String chessman = piece == null ? EMPTY : getChessman(piece);
                 System.out.print(bgColor + chessman + " ");
