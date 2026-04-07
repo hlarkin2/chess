@@ -7,7 +7,6 @@ import chess.ChessPosition;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
-import org.glassfish.grizzly.http.server.Response;
 import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
 
@@ -44,9 +43,9 @@ public class ChessClient {
                 case "logout" -> logout();
                 case "redraw" -> redraw();
                 case "leave" -> leave();
-                case "move" -> move();
+                case "move" -> move(params);
                 case "resign" -> resign();
-                case "highlight" -> highlight();
+                case "highlight" -> highlight(params);
                 default -> help();
             };
         } catch (ResponseException e) {
@@ -225,6 +224,8 @@ public class ChessClient {
             } catch (IOException e) {
                 throw new ResponseException(e.getMessage());
             }
+        } else {
+            return "Resignation cancelled";
         }
 
         return username + " has resigned";
