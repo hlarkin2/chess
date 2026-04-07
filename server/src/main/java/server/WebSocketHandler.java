@@ -27,17 +27,21 @@ public class WebSocketHandler {
         this.dataAccess = dataAccess;
     }
 
-    public void onMessage(WsMessageContext context) {
+    public void onMessage(WsMessageContext context) throws IOException {
         String message = context.message();
         Session session = context.session;
 
         UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
 
-        switch (command.getCommandType()) {
-            case CONNECT -> handleConnect(session, command);
-            case MAKE_MOVE -> handleMakeMove(session, command);
-            case LEAVE -> handleLeave(session, command);
-            case RESIGN -> handleResign(session, command);
+        try {
+            switch (command.getCommandType()) {
+                case CONNECT -> handleConnect(session, command);
+                case MAKE_MOVE -> handleMakeMove(session, command);
+                case LEAVE -> handleLeave(session, command);
+                case RESIGN -> handleResign(session, command);
+            }
+        } catch (IOException msg) {
+            session.getRemote().sendString(new Gson().toJson(new ErrorMessage("Error: unable to read command")));
         }
     }
 
