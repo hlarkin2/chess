@@ -7,10 +7,7 @@ import model.UserData;
 import websocket.commands.UserGameCommand;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class ChessClient {
     private String username = null;
@@ -213,8 +210,18 @@ public class ChessClient {
         return "Left game";
     }
 
-    public String resign() {
+    public String resign() throws ResponseException {
+        System.out.print("Are you sure you want to resign? (yes/no) ");
+        String input = new Scanner(System.in).nextLine();
+        if (input.equals("yes")) {
+            try{
+                server.sendCommand(new UserGameCommand(UserGameCommand.CommandType.RESIGN, authToken, currentGameID));
+            } catch (IOException e) {
+                throw new ResponseException(e.getMessage());
+            }
+        }
 
+        return username + " has resigned";
     }
 
     public String move(String... params) {
