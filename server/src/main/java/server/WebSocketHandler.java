@@ -166,7 +166,42 @@ public class WebSocketHandler {
         }
     }
 
-    private void handleResign(Session session, UserGameCommand command) {
+    private void handleResign(Session session, UserGameCommand command) throws IOException {
+        try {
+            AuthData auth = dataAccess.getAuth(command.getAuthToken());
+            GameData game = dataAccess.getGame(command.getGameID());
 
+            if (auth == null || game == null) {
+                session.getRemote().sendString(new Gson().toJson(new ErrorMessage("Error: unable find session")));
+                return;
+            }
+
+            String user;
+            if (auth.username().equals(game.whiteUsername())) {
+                user = game.whiteUsername();
+            } else if (auth.username().equals(game.blackUsername())) {
+                user = game.blackUsername();
+            } else {
+                user = "observer";
+            }
+
+            if (game.game().isGameOver()) {
+                session.getRemote().sendString(new Gson().toJson(new ErrorMessage("Error: unable to resign ended game")));
+                return;
+            }
+
+            if (!user.equals("observer")) {
+                game.game().setGameEnded();
+                dataAccess.updateGame(game);
+            } else {
+                session.getRemote().sendString(new Gson().toJson(new ErrorMessage("Error: observers are unable to resign game")));
+                return;
+            }
+
+            connectionManager.broadcast(game.gameID(), new Gson().toJson(new NotificationMessage(auth.username() + " has resigned the game")), null);
+
+        } catch (DataAccessException message) {
+            session.getRemote().sendString(new Gson().toJson(new ErrorMessage("Error: error with resigning game")));
+        }
     }
 }
