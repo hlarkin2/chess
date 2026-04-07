@@ -7,6 +7,7 @@ import chess.ChessPosition;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
+import org.glassfish.grizzly.http.server.Response;
 import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
 
@@ -199,7 +200,8 @@ public class ChessClient {
     }
 
     public String redraw() {
-        return new BoardRenderer(currentGame.getBoard(), playerColor).render();
+        new BoardRenderer(currentGame.getBoard(), playerColor).render();
+        return "Board redrawn";
     }
 
     public String leave() throws ResponseException {
@@ -255,7 +257,24 @@ public class ChessClient {
         throw new ResponseException("Error: Expected move <from> <to>");
     }
 
-    public String highlight(String... params) {
+    public String highlight(String... params) throws ResponseException {
+        if (params.length >= 1) {
+            try {
+                String startPos = params[0];
+
+                int startRow = Character.getNumericValue(startPos.charAt(1));
+                int startCol = startPos.charAt(0) - 'a' + 1;
+                ChessPosition startingPos = new ChessPosition(startRow, startCol);
+
+                Collection<ChessMove> moves = currentGame.validMoves(startingPos);
+                new BoardRenderer(moves, currentGame.getBoard(), playerColor).render();
+
+                return "Possible moves";
+            } catch (ResponseException e) {
+                throw new ResponseException(e.getMessage());
+            }
+        }
+        throw new ResponseException("Error: Expected move <from> <to>");
 
     }
 
