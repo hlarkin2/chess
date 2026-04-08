@@ -36,7 +36,7 @@ public class WebSocketHandler {
         try {
             switch (command.getCommandType()) {
                 case CONNECT -> handleConnect(session, command);
-                case MAKE_MOVE -> handleMakeMove(session, command);
+                case MAKE_MOVE -> handleMakeMove(session, new Gson().fromJson(message, MakeMoveCommand.class));
                 case LEAVE -> handleLeave(session, command);
                 case RESIGN -> handleResign(session, command);
             }
@@ -75,7 +75,7 @@ public class WebSocketHandler {
         }
     }
 
-    private void handleMakeMove(Session session, UserGameCommand command) throws IOException {
+    private void handleMakeMove(Session session, MakeMoveCommand command) throws IOException {
         try {
             AuthData auth = dataAccess.getAuth(command.getAuthToken());
             GameData game = dataAccess.getGame(command.getGameID());
@@ -94,12 +94,29 @@ public class WebSocketHandler {
                 user = "observer";
             }
 
+            if (user.equals("observer")) {
+                session.getRemote().sendString(new Gson().toJson(new ErrorMessage("Error: observers cannot make moves")));
+                return;
+            }
+
             if (game.game().isGameOver()) {
                 session.getRemote().sendString(new Gson().toJson(new ErrorMessage("Error: unable to join ended game")));
                 return;
             }
 
-            ChessMove move = ((MakeMoveCommand) command).getMove();
+            ChessMove move = command.getMove();
+            ChessGame.TeamColor playerColor;
+
+            if (auth.username().equals(game.whiteUsername())) {
+                playerColor = ChessGame.TeamColor.WHITE;
+            } else {
+                playerColor = ChessGame.TeamColor.BLACK;
+            }
+
+            if (playerColor != game.game().getTeamTurn()) {
+                session.getRemote().sendString(new Gson().toJson(new ErrorMessage("Error: Not your turn")));
+                return;
+            }
 
             try {
                 game.game().makeMove(move);

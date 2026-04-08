@@ -37,12 +37,18 @@ public class BoardRenderer {
             for (int col = startCol; col != endCol; col += shiftCol) {
                 String bgColor = (row + col) % 2 == 0 ? SET_BG_COLOR_DARK_GREEN : SET_BG_COLOR_WHITE;
                 if (highlightMoves != null) {
+                    ChessPosition startPos = highlightMoves.iterator().next().getStartPosition();
+                    if (startPos.getRow() == row && startPos.getColumn() == col) {
+                        bgColor = SET_BG_COLOR_BLUE;
+                    }
+
                     for (ChessMove move : highlightMoves) {
                         if (move.getEndPosition().getRow() == row && move.getEndPosition().getColumn() == col) {
                             bgColor = SET_BG_COLOR_MAGENTA;
                             break;
                         }
                     }
+
                 }
 
                 ChessPiece piece = board.getPiece(new ChessPosition(row, col));
