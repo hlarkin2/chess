@@ -125,7 +125,6 @@ public class ChessClient {
                 GameData game = gameList.get(gameNum - 1);
                 server.joinGame(game, params[1].toUpperCase(), auth);
                 ChessGame.TeamColor color = params[1].equalsIgnoreCase("BLACK") ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
-                new BoardRenderer(game.game().getBoard(), color).render();
                 state = State.GAMEPLAY;
                 currentGameID = game.gameID();
                 playerColor = color;
@@ -205,14 +204,13 @@ public class ChessClient {
     }
 
     public String leave() throws ResponseException {
-        UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, currentGameID);
         try {
+            UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, currentGameID);
             server.sendCommand(command);
-        } catch (IOException e) {
-            throw new ResponseException(e.getMessage());
+        } catch (IOException | IllegalStateException e) {
+
         }
         state = State.SIGNEDIN;
-
         return "Left game";
     }
 
@@ -233,6 +231,9 @@ public class ChessClient {
     }
 
     public String move(String... params) throws ResponseException {
+        if (currentGame.isGameOver()) {
+            throw new ResponseException("Error: game is over");
+        }
         if (params.length == 2) {
             try {
                 String startPos = params[0];
@@ -269,11 +270,16 @@ public class ChessClient {
                 ChessPosition startingPos = new ChessPosition(startRow, startCol);
 
                 Collection<ChessMove> moves = currentGame.validMoves(startingPos);
+                if (moves == null) {
+                    return "No valid moves at that position";
+                }
                 new BoardRenderer(moves, currentGame.getBoard(), playerColor).render();
 
                 return "Possible moves";
             } catch (ResponseException e) {
                 throw new ResponseException(e.getMessage());
+            } catch (Exception e) {
+                throw new ResponseException(e.getMessage() != null ? e.getMessage() : "Error: highlight failed");
             }
         }
         throw new ResponseException("Error: Expected move <from> <to>");
