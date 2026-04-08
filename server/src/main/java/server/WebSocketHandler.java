@@ -59,15 +59,19 @@ public class WebSocketHandler {
             session.getRemote().sendString(new Gson().toJson(new LoadGameMessage(game.game())));
 
             String user;
+            NotificationMessage message;
+
             if (auth.username().equals(game.whiteUsername())) {
                 user = game.whiteUsername();
+                message = new NotificationMessage(user + " joined the game as WHITE");
             } else if (auth.username().equals(game.blackUsername())) {
                 user = game.blackUsername();
+                message = new NotificationMessage(user + " joined the game as BLACK");
+
             } else {
-                user = "observer";
+                message = new NotificationMessage(auth.username() + " joined the game as an observer");
             }
 
-            NotificationMessage message = new NotificationMessage("Connecting " + user + " to the game");
             connectionManager.broadcast(game.gameID(), new Gson().toJson(message), session);
 
         } catch (DataAccessException message) {
