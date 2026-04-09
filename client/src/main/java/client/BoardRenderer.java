@@ -31,35 +31,50 @@ public class BoardRenderer {
 
         printColHeaders(startCol, endCol, shiftCol);
 
-        for (int row = startRow; row != endRow; row+= shift) {
+        for (int row = startRow; row != endRow; row += shift) {
             System.out.print(SET_BG_COLOR_LIGHT_GREY + RESET_TEXT_COLOR + " " + row + " ");
 
             for (int col = startCol; col != endCol; col += shiftCol) {
-                String bgColor = (row + col) % 2 == 0 ? SET_BG_COLOR_DARK_GREEN : SET_BG_COLOR_WHITE;
-                if (highlightMoves != null) {
-                    ChessPosition startPos = highlightMoves.iterator().next().getStartPosition();
-                    if (startPos.getRow() == row && startPos.getColumn() == col) {
-                        bgColor = SET_BG_COLOR_BLUE;
-                    }
-
-                    for (ChessMove move : highlightMoves) {
-                        if (move.getEndPosition().getRow() == row && move.getEndPosition().getColumn() == col) {
-                            bgColor = SET_BG_COLOR_MAGENTA;
-                            break;
-                        }
-                    }
-
-                }
-
+                String bgColor = getSquareColor(row, col);
                 ChessPiece piece = board.getPiece(new ChessPosition(row, col));
                 String chessman = piece == null ? EMPTY : getChessman(piece);
                 System.out.print(bgColor + chessman + " ");
             }
 
-            System.out.print(SET_BG_COLOR_LIGHT_GREY + RESET_TEXT_COLOR  + " " + row + " " + RESET_BG_COLOR);
+            System.out.print(SET_BG_COLOR_LIGHT_GREY + RESET_TEXT_COLOR + " " + row + " " + RESET_BG_COLOR);
             System.out.println();
         }
         printColHeaders(startCol, endCol, shiftCol);
+    }
+
+    private String getSquareColor(int row, int col) {
+        if (isStartPosition(row, col)) {
+            return SET_BG_COLOR_BLUE;
+        }
+        if (isHighlighted(row, col)) {
+            return SET_BG_COLOR_MAGENTA;
+        }
+        return (row + col) % 2 == 0 ? SET_BG_COLOR_DARK_GREEN : SET_BG_COLOR_WHITE;
+    }
+
+    private boolean isStartPosition(int row, int col) {
+        if (highlightMoves == null || highlightMoves.isEmpty()) {
+            return false;
+        }
+        ChessPosition startPos = highlightMoves.iterator().next().getStartPosition();
+        return startPos.getRow() == row && startPos.getColumn() == col;
+    }
+
+    private boolean isHighlighted(int row, int col) {
+        if (highlightMoves == null) {
+            return false;
+        }
+        for (ChessMove move : highlightMoves) {
+            if (move.getEndPosition().getRow() == row && move.getEndPosition().getColumn() == col) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private String getChessman(ChessPiece piece) {
