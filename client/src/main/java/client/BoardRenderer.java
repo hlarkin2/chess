@@ -54,7 +54,7 @@ public class BoardRenderer {
         if (isHighlighted(row, col)) {
             return SET_BG_COLOR_MAGENTA;
         }
-        return (row + col) % 2 == 0 ? SET_BG_COLOR_DARK_GREEN : SET_BG_COLOR_WHITE;
+        return (row + col) % 2 == 0 ? SET_BG_COLOR_BLACK : SET_BG_COLOR_WHITE;
     }
 
     private boolean isStartPosition(int row, int col) {

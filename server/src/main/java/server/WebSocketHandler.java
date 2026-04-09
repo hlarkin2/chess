@@ -134,16 +134,17 @@ public class WebSocketHandler {
             connectionManager.broadcast(game.gameID(), new Gson().toJson(new LoadGameMessage(game.game())), null);
 
             ChessGame.TeamColor opponent = game.game().getTeamTurn();
+            String opponentUsername = opponent == ChessGame.TeamColor.WHITE ? game.whiteUsername() : game.blackUsername();
             if (game.game().isInCheckmate(opponent)) {
                 game.game().setGameEnded();
                 dataAccess.updateGame(game);
-                connectionManager.broadcast(game.gameID(), new Gson().toJson(new NotificationMessage(opponent + " is in checkmate")), null);
+                connectionManager.broadcast(game.gameID(), new Gson().toJson(new NotificationMessage(opponentUsername + " is in checkmate")), null);
             } else if (game.game().isInStalemate(opponent)) {
                 game.game().setGameEnded();
                 dataAccess.updateGame(game);
-                connectionManager.broadcast(game.gameID(), new Gson().toJson(new NotificationMessage(opponent + " is in stalemate")), null);
+                connectionManager.broadcast(game.gameID(), new Gson().toJson(new NotificationMessage(opponentUsername + " is in stalemate")), null);
             } else if (game.game().isInCheck(opponent)) {
-                connectionManager.broadcast(game.gameID(), new Gson().toJson(new NotificationMessage(opponent + " is in check")), null);
+                connectionManager.broadcast(game.gameID(), new Gson().toJson(new NotificationMessage(opponentUsername + " is in check")), null);
             }
 
         } catch (DataAccessException e) {

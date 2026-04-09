@@ -272,6 +272,8 @@ public class ChessClient {
 
             } catch (IOException | IllegalStateException e) {
                 throw new ResponseException(e.getMessage());
+            } catch (ArrayIndexOutOfBoundsException e) {
+                throw new ResponseException("Error: Invalid format. Expected move <colrow> <colrow> (e.g. a2 a4)");
             }
         }
         throw new ResponseException("Error: Expected move <from> <to>");
