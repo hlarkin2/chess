@@ -247,7 +247,24 @@ public class ChessClient {
                 ChessPosition startingPos = new ChessPosition(startRow, startCol);
                 ChessPosition endingPos = new ChessPosition(endRow, endCol);
 
-                ChessMove newMove = new ChessMove(startingPos, endingPos, null);
+                ChessPiece.PieceType promotionPiece = null;
+                ChessPiece piece = currentGame.getBoard().getPiece(startingPos);
+                boolean isPromotion = piece != null
+                        && piece.getPieceType() == ChessPiece.PieceType.PAWN
+                        && (endRow == 8 || endRow == 1);
+
+                if (isPromotion) {
+                    System.out.print("Promote to (queen/rook/bishop/knight): ");
+                    String choice = new Scanner(System.in).nextLine().toLowerCase();
+                    promotionPiece = switch (choice) {
+                        case "rook" -> ChessPiece.PieceType.ROOK;
+                        case "bishop" -> ChessPiece.PieceType.BISHOP;
+                        case "knight" -> ChessPiece.PieceType.KNIGHT;
+                        default -> ChessPiece.PieceType.QUEEN;
+                    };
+                }
+
+                ChessMove newMove = new ChessMove(startingPos, endingPos, promotionPiece);
                 MakeMoveCommand command = new MakeMoveCommand(newMove, authToken, currentGameID);
                 server.sendCommand(command);
 

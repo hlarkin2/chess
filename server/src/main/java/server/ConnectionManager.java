@@ -29,7 +29,9 @@ public class ConnectionManager {
             if (session.equals(excludeSession)) {
                 continue;
             }
-
+            if (!session.isOpen()) {
+                continue;
+            }
             session.getRemote().sendString(message);
         }
     }
