@@ -220,7 +220,7 @@ public class ChessClient {
         if (input.equals("yes")) {
             try{
                 server.sendCommand(new UserGameCommand(UserGameCommand.CommandType.RESIGN, authToken, currentGameID));
-            } catch (IOException e) {
+            } catch (IOException | IllegalStateException e) {
                 throw new ResponseException(e.getMessage());
             }
         } else {
@@ -253,7 +253,7 @@ public class ChessClient {
 
                 return "Move made";
 
-            } catch (IOException e) {
+            } catch (IOException | IllegalStateException e) {
                 throw new ResponseException(e.getMessage());
             }
         }
